@@ -22,7 +22,7 @@ export default function ContactPage() {
       </nav>
       <section className="hero" style={{ padding: '60px 40px' }}>
         <h1>お問い<span>合わせ</span></h1>
-        <p>まずはお気軽にご相談ください。通常2営業日以内にご返信します。</p>
+        <p>まずはお気軽にご相談ください。通常2営業日以内に返信します。</p>
       </section>
       <section className="section" style={{ maxWidth: '700px' }}>
         {status === 'done' ? (
