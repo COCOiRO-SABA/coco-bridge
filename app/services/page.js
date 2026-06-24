@@ -1,14 +1,18 @@
-'use client'
-import { useState } from 'react'
-export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', company: '', email: '', phone: '', message: '' })
-  const [status, setStatus] = useState('')
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setStatus('sending')
-    await new Promise(r => setTimeout(r, 1000))
-    setStatus('done')
+async function getServices() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_GAS_API}?sheet=サービス`, { cache: 'no-store' })
+    const data = await res.json()
+    return data.filter(s => s['公開'] === true || s['公開'] === 'TRUE')
+  } catch (e) {
+    return []
   }
+}
+export const metadata = {
+  title: 'サービス一覧｜COCO&Bridge',
+  description: 'ウェブ制作・SNS/LINE運用・DX業務効率化・介護業界参入コンサルの4サービスを提供しています。',
+}
+export default async function ServicesPage() {
+  const services = await getServices()
   return (
     <>
       <nav className="nav">
@@ -21,59 +25,32 @@ export default function ContactPage() {
         </ul>
       </nav>
       <section className="hero" style={{ padding: '60px 40px' }}>
-        <h1>お問い<span>合わせ</span></h1>
-        <p>まずはお気軽にご相談ください。通常2営業日以内にご返信します。</p>
+        <h1>サービス<span>一覧</span></h1>
+        <p>あなたの課題に合ったサービスをご提案します。</p>
       </section>
-      <section className="section" style={{ maxWidth: '700px' }}>
-        {status === 'done' ? (
-          <div style={{ textAlign: 'center', padding: '60px 0' }}>
-            <p style={{ fontSize: '24px', color: 'var(--navy)', marginBottom: '16px' }}>✅ 送信完了しました</p>
-            <p style={{ color: 'var(--gray-600)' }}>お問い合わせありがとうございます。2営業日以内にご連絡いたします。</p>
-            <a href="/" className="btn-primary" style={{ display: 'inline-block', marginTop: '32px' }}>トップに戻る</a>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '24px' }}>
-            {[
-              { label: 'お名前', key: 'name', type: 'text', required: true },
-              { label: '会社名', key: 'company', type: 'text', required: false },
-              { label: 'メールアドレス', key: 'email', type: 'email', required: true },
-              { label: '電話番号', key: 'phone', type: 'tel', required: false },
-            ].map(field => (
-              <div key={field.key}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: 'var(--navy)', marginBottom: '8px' }}>
-                  {field.label}{field.required && <span style={{ color: 'var(--gold)', marginLeft: '4px' }}>*</span>}
-                </label>
-                <input
-                  type={field.type}
-                  required={field.required}
-                  value={form[field.key]}
-                  onChange={e => setForm({ ...form, [field.key]: e.target.value })}
-                  style={{ width: '100%', padding: '12px 16px', border: '1px solid var(--gray-200)', borderRadius: '4px', fontSize: '15px' }}
-                />
-              </div>
-            ))}
-            <div>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: 'var(--navy)', marginBottom: '8px' }}>
-                お問い合わせ内容<span style={{ color: 'var(--gold)', marginLeft: '4px' }}>*</span>
-              </label>
-              <textarea
-                required
-                rows={6}
-                value={form.message}
-                onChange={e => setForm({ ...form, message: e.target.value })}
-                style={{ width: '100%', padding: '12px 16px', border: '1px solid var(--gray-200)', borderRadius: '4px', fontSize: '15px', resize: 'vertical' }}
-              />
+      <section className="section">
+        <div className="services-grid">
+          {services.map((service, i) => (
+            <div key={i} className="service-card">
+              <p className="service-card-category">{service['カテゴリ']}</p>
+              <h3>{service['サービス名']}</h3>
+              <p>{service['キャッチコピー']}</p>
+              <p style={{ fontSize: '13px', color: 'var(--gray-600)', marginTop: '12px', lineHeight: '1.8' }}>
+                {service['本文']}
+              </p>
+              {service['月額料金'] && (
+                <div className="service-card-price">
+                  月額 <strong>¥{Number(service['月額料金']).toLocaleString()}</strong> 〜
+                </div>
+              )}
             </div>
-            <button
-              type="submit"
-              disabled={status === 'sending'}
-              className="btn-primary"
-              style={{ border: 'none', cursor: 'pointer', width: '100%', padding: '16px' }}
-            >
-              {status === 'sending' ? '送信中...' : '送信する'}
-            </button>
-          </form>
-        )}
+          ))}
+        </div>
+      </section>
+      <section style={{ background: 'var(--gray-100)', padding: '80px 40px', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '28px', color: 'var(--navy)', marginBottom: '16px' }}>まずはお気軽にご相談ください</h2>
+        <p style={{ color: 'var(--gray-600)', marginBottom: '32px' }}>貴社の課題をヒアリングし、最適なプランを提案します。</p>
+        <a href="/contact" className="btn-primary">無料相談・お問い合わせ</a>
       </section>
       <footer className="footer">
         <div className="footer-logo">COCO<span>&</span>Bridge</div>
