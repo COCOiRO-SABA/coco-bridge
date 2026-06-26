@@ -1,14 +1,17 @@
 'use client'
 import { useState } from 'react'
+
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', company: '', email: '', phone: '', message: '' })
   const [status, setStatus] = useState('')
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setStatus('sending')
     await new Promise(r => setTimeout(r, 1000))
     setStatus('done')
   }
+
   return (
     <>
       <nav className="nav">
@@ -20,10 +23,12 @@ export default function ContactPage() {
           <li><a href="/contact">お問い合わせ</a></li>
         </ul>
       </nav>
+
       <section className="hero" style={{ padding: '60px 40px' }}>
         <h1>お問い<span>合わせ</span></h1>
         <p>まずはお気軽にご相談ください。通常2営業日以内に返信します。</p>
       </section>
+
       <section className="section" style={{ maxWidth: '700px' }}>
         {status === 'done' ? (
           <div style={{ textAlign: 'center', padding: '60px 0' }}>
@@ -75,9 +80,10 @@ export default function ContactPage() {
           </form>
         )}
       </section>
+
       <footer className="footer">
         <div className="footer-logo">COCO<span>&</span>Bridge</div>
-        <p>© {new Date().getFullYear()} COCO&Bridge / 田村 恵</p>
+        <p>© {new Date().getFullYear()} COCO&Bridge株式会社</p>
       </footer>
     </>
   )
