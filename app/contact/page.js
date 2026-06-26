@@ -12,9 +12,9 @@ export default function ContactPage() {
   return (
     <>
       <nav className="nav">
-        <div className="nav-logo">COCO<span>&</span>Bridge</div>
+        <a href="/" className="nav-logo">COCO<span>&</span>Bridge</a>
         <ul className="nav-links">
-          <li><a href="/#services">サービス</a></li>
+          <li><a href="/services">サービス</a></li>
           <li><a href="/about">私たちについて</a></li>
           <li><a href="/blog">ブログ</a></li>
           <li><a href="/contact">お問い合わせ</a></li>
@@ -28,7 +28,7 @@ export default function ContactPage() {
         {status === 'done' ? (
           <div style={{ textAlign: 'center', padding: '60px 0' }}>
             <p style={{ fontSize: '24px', color: 'var(--navy)', marginBottom: '16px' }}>✅ 送信完了しました</p>
-            <p style={{ color: 'var(--gray-600)' }}>お問い合わせありがとうございます。2営業日以内にご連絡いたします。</p>
+            <p style={{ color: 'var(--gray-600)' }}>問い合わせありがとうございます。2営業日以内に連絡します。</p>
             <a href="/" className="btn-primary" style={{ display: 'inline-block', marginTop: '32px' }}>トップに戻る</a>
           </div>
         ) : (
@@ -54,7 +54,7 @@ export default function ContactPage() {
             ))}
             <div>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: 'var(--navy)', marginBottom: '8px' }}>
-                お問い合わせ内容<span style={{ color: 'var(--gold)', marginLeft: '4px' }}>*</span>
+                問い合わせ内容<span style={{ color: 'var(--gold)', marginLeft: '4px' }}>*</span>
               </label>
               <textarea
                 required
@@ -77,7 +77,7 @@ export default function ContactPage() {
       </section>
       <footer className="footer">
         <div className="footer-logo">COCO<span>&</span>Bridge</div>
-        <p>© 2025 COCOiRO Inc. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} COCO&Bridge / 田村 恵</p>
       </footer>
     </>
   )
