@@ -65,7 +65,7 @@ export default async function ServicesPage() {
       </section>
       <footer className="footer">
         <div className="footer-logo">COCO<span>&</span>Bridge</div>
-        <p>© {new Date().getFullYear()} {config.footer_text || 'COCO&Bridge / 田村 恵'}</p>
+        <p>© {new Date().getFullYear()} {config.footer_text || 'COCO&Bridge株式会社'}</p>
       </footer>
     </>
   )
