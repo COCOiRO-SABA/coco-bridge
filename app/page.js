@@ -40,18 +40,12 @@ async function getNews() {
 }
 export default async function Home() {
   const [config, services, sections, news] = await Promise.all([
-    getSiteConfig(),
-    getServices(),
-    getSections(),
-    getNews(),
+    getSiteConfig(), getServices(), getSections(), getNews(),
   ])
   return (
     <>
-      {/* ナビゲーション */}
       <nav className="nav">
-        <a href="/" className="nav-logo">
-          COCO<span>&</span>Bridge
-        </a>
+        <a href="/" className="nav-logo">COCO<span>&</span>Bridge</a>
         <ul className="nav-links">
           <li><a href="/services">サービス</a></li>
           <li><a href="/about">私たちについて</a></li>
@@ -59,18 +53,14 @@ export default async function Home() {
           <li><a href="/contact">お問い合わせ</a></li>
         </ul>
       </nav>
-      {/* ヒーロー */}
       {sections.hero !== false && (
         <section className="hero">
           <h1>{config.catch_copy || 'デジタルで、ビジネスの橋を架ける。'}</h1>
-          <p>{config.sub_copy || 'あなたの「なぜ」から考える、個人の外部DXパートナー'}</p>
-          <a href={config.cta_url || '/contact'} className="btn-primary">
-            {config.cta_text || '無料相談はこちら'}
-          </a>
+          <p>{config.sub_copy || '課題の本質から考える、DX伴走パートナー'}</p>
+          <a href={config.cta_url || '/contact'} className="btn-primary">{config.cta_text || '無料相談はこちら'}</a>
           <a href="/services" className="btn-outline">サービスを見る</a>
         </section>
       )}
-      {/* コンセプト */}
       {sections.concept !== false && (
         <section className="section">
           <p className="section-subtitle">CONCEPT</p>
@@ -80,9 +70,8 @@ export default async function Home() {
           </p>
         </section>
       )}
-      {/* サービス */}
       {sections.services !== false && (
-        <section className="section" style={{ background: 'var(--gray-100)', maxWidth: '100%', padding: '80px 40px' }}>
+        <section style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
           <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
             <p className="section-subtitle">SERVICES</p>
             <h2 className="section-title">サービス一覧</h2>
@@ -106,31 +95,28 @@ export default async function Home() {
           </div>
         </section>
       )}
-      {/* 代表プロフィール */}
       {sections.profile !== false && (
         <section className="section">
           <p className="section-subtitle">PROFILE</p>
           <h2 className="section-title">代表プロフィール</h2>
-          <div style={{ display: 'flex', gap: '48px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-            <div style={{ width: '200px', height: '200px', background: 'var(--gray-200)', borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gray-600)', fontSize: '14px' }}>
+          <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start', flexWrap: 'wrap', marginTop: '32px' }}>
+            <div style={{ width: '160px', height: '160px', background: 'var(--gray-200)', borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gray-600)', fontSize: '13px' }}>
               写真
             </div>
-            <div style={{ flex: 1, minWidth: '280px' }}>
-              <h3 style={{ fontSize: '22px', color: 'var(--navy)', marginBottom: '8px' }}>{config.profile_name}</h3>
-              <p style={{ fontSize: '15px', lineHeight: '2', color: 'var(--gray-600)', whiteSpace: 'pre-line' }}>
-                {config.profile_body}
-              </p>
+            <div style={{ flex: 1, minWidth: '260px' }}>
+              <h3 style={{ fontSize: '20px', color: 'var(--navy)', marginBottom: '12px' }}>{config.profile_name}</h3>
+              <p style={{ fontSize: '15px', lineHeight: '2', color: 'var(--gray-600)' }}>{config.profile_short}</p>
+              <a href="/about" style={{ display: 'inline-block', marginTop: '16px', fontSize: '14px', color: 'var(--gold)', borderBottom: '1px solid var(--gold)', paddingBottom: '2px' }}>詳しいプロフィールを見る →</a>
             </div>
           </div>
         </section>
       )}
-      {/* お知らせ */}
       {sections.news !== false && news.length > 0 && (
-        <section className="section" style={{ background: 'var(--gray-100)', maxWidth: '100%', padding: '80px 40px' }}>
+        <section style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
           <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
             <p className="section-subtitle">NEWS</p>
             <h2 className="section-title">お知らせ</h2>
-            <div style={{ display: 'grid', gap: '16px', marginTop: '32px' }}>
+            <div style={{ display: 'grid', gap: '12px', marginTop: '32px' }}>
               {news.map((post, i) => (
                 <div key={i} style={{ background: 'white', borderRadius: '8px', padding: '20px 24px', display: 'flex', gap: '16px', alignItems: 'center' }}>
                   <span style={{ fontSize: '13px', color: 'var(--gray-600)', whiteSpace: 'nowrap' }}>{post['公開日']}</span>
@@ -140,29 +126,21 @@ export default async function Home() {
               ))}
             </div>
             <div style={{ textAlign: 'center', marginTop: '32px' }}>
-              <a href="/blog" className="btn-outline" style={{ color: 'var(--navy)', borderColor: 'var(--navy)' }}>お知らせ一覧</a>
+              <a href="/blog" style={{ fontSize: '14px', color: 'var(--navy)', borderBottom: '1px solid var(--navy)', paddingBottom: '2px' }}>お知らせ一覧を見る →</a>
             </div>
           </div>
         </section>
       )}
-      {/* CTA */}
       {sections.cta !== false && (
         <section style={{ background: 'var(--navy)', padding: '80px 40px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '28px', color: 'white', marginBottom: '16px' }}>
-            まずは気軽に相談ください
-          </h2>
-          <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '32px' }}>
-            貴社の課題をヒアリングし、最適なプランを提案します。
-          </p>
-          <a href={config.cta_url || '/contact'} className="btn-primary">
-            {config.cta_text || '無料相談はこちら'}
-          </a>
+          <h2 style={{ fontSize: '28px', color: 'white', marginBottom: '16px' }}>まずは気軽に相談ください</h2>
+          <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '32px' }}>貴社の課題をヒアリングし、最適なプランを提案します。</p>
+          <a href={config.cta_url || '/contact'} className="btn-primary">{config.cta_text || '無料相談はこちら'}</a>
         </section>
       )}
-      {/* フッター */}
       <footer className="footer">
         <div className="footer-logo">COCO<span>&</span>Bridge</div>
-        <p>© {new Date().getFullYear()} {config.footer_text || 'COCO&Bridge / 田村 恵'}</p>
+        <p>© {new Date().getFullYear()} {config.footer_text || 'COCO&Bridge株式会社'}</p>
       </footer>
     </>
   )
