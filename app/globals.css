@@ -351,3 +351,15 @@ img {
   box-shadow: 0 20px 48px rgba(26,39,68,0.15) !important;
   transform: translateY(-8px) !important;
 }
+
+/* サービス4カラムレスポンシブ */
+@media (max-width: 1100px) {
+  .services-4col {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 600px) {
+  .services-4col {
+    grid-template-columns: 1fr !important;
+  }
+}
