@@ -18,7 +18,7 @@ export default function ContactPage() {
     try {
       const res = await fetch(process.env.NEXT_PUBLIC_GAS_API, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ action: 'contact', data: form }),
       })
       const json = await res.json()
