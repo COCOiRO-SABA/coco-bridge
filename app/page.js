@@ -85,11 +85,11 @@ export default async function Home() {
 
       {sections.services !== false && (
         <section style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
-          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             <p className="section-subtitle">SERVICES</p>
             <h2 className="section-title">サービス一覧</h2>
             <FadeIn>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px', marginTop: '40px' }}>
+            <div className="services-4col" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', marginTop: '40px' }}>
               {services.map((service, i) => (
                 <div key={i} className="service-card-hover" style={{ background: 'white', borderRadius: '12px', padding: '36px 28px', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 12px rgba(26,39,68,0.06)' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'linear-gradient(90deg, #1a2744, #b8954a)' }} />
