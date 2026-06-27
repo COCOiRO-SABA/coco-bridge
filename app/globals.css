@@ -154,51 +154,72 @@ img {
 /* サービスカード */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+  margin-top: 40px;
 }
 
 .service-card {
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
-  padding: 32px 24px;
-  transition: box-shadow 0.2s, transform 0.2s;
+  background: var(--white);
+  border-radius: 12px;
+  padding: 36px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.25s;
+  box-shadow: 0 2px 12px rgba(26,39,68,0.06);
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--navy), var(--gold));
 }
 
 .service-card:hover {
-  box-shadow: 0 8px 32px rgba(26,39,68,0.1);
-  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(26,39,68,0.12);
+  transform: translateY(-6px);
 }
 
 .service-card-category {
-  font-size: 12px;
+  display: inline-block;
+  font-size: 11px;
   color: var(--gold);
-  letter-spacing: 0.1em;
-  margin-bottom: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(184,149,74,0.08);
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 16px;
 }
 
 .service-card h3 {
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 700;
   color: var(--navy);
   margin-bottom: 12px;
+  line-height: 1.4;
 }
 
 .service-card p {
   font-size: 14px;
   color: var(--gray-600);
-  line-height: 1.8;
+  line-height: 1.9;
 }
 
 .service-card-price {
-  margin-top: 20px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--gray-200);
   font-size: 13px;
   color: var(--gray-600);
 }
 
 .service-card-price strong {
-  font-size: 20px;
+  font-size: 22px;
   color: var(--navy);
+  font-weight: 700;
 }
 
 /* フッター */
