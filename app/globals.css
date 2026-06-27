@@ -4,6 +4,7 @@
   box-sizing: border-box;
 }
 
+
 :root {
   --navy: #1a2744;
   --gold: #b8954a;
@@ -15,6 +16,7 @@
   --gray-900: #1a1a1a;
 }
 
+
 body {
   font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   color: var(--gray-900);
@@ -22,15 +24,18 @@ body {
   line-height: 1.7;
 }
 
+
 a {
   color: inherit;
   text-decoration: none;
 }
 
+
 img {
   max-width: 100%;
   height: auto;
 }
+
 
 /* ナビゲーション */
 .nav {
@@ -45,6 +50,7 @@ img {
   z-index: 100;
 }
 
+
 .nav-logo {
   color: var(--white);
   font-size: 20px;
@@ -52,9 +58,11 @@ img {
   letter-spacing: 0.05em;
 }
 
+
 .nav-logo span {
   color: var(--gold);
 }
+
 
 .nav-links {
   display: flex;
@@ -62,202 +70,122 @@ img {
   list-style: none;
 }
 
+
 .nav-links a {
   color: rgba(255,255,255,0.8);
   font-size: 14px;
   transition: color 0.2s;
 }
 
-.nav-links a:hover {
-  color: var(--gold);
-}
 
-/* ヒーロー */
+
+/* =============================
+   アニメーション
+============================= */
+/* スクロールフェードイン */
+.fade-in {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-in-delay-1 { transition-delay: 0.1s; }
+.fade-in-delay-2 { transition-delay: 0.2s; }
+.fade-in-delay-3 { transition-delay: 0.3s; }
+.fade-in-delay-4 { transition-delay: 0.4s; }
+/* ヒーロー背景アニメーション */
 .hero {
-  background: var(--navy);
-  color: var(--white);
-  padding: 100px 40px;
-  text-align: center;
-}
-
-.hero h1 {
-  font-size: clamp(32px, 5vw, 56px);
-  font-weight: 700;
-  line-height: 1.3;
-  margin-bottom: 24px;
-}
-
-.hero h1 span {
-  color: var(--gold);
-}
-
-.hero p {
-  font-size: 18px;
-  color: rgba(255,255,255,0.8);
-  max-width: 600px;
-  margin: 0 auto 40px;
-}
-
-.btn-primary {
-  display: inline-block;
-  background: var(--gold);
-  color: var(--white);
-  padding: 14px 40px;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.btn-primary:hover {
-  background: var(--gold-light);
-}
-
-.btn-outline {
-  display: inline-block;
-  border: 2px solid var(--gold);
-  color: var(--gold);
-  padding: 12px 40px;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: 600;
-  margin-left: 16px;
-  transition: all 0.2s;
-}
-
-.btn-outline:hover {
-  background: var(--gold);
-  color: var(--white);
-}
-
-/* セクション共通 */
-.section {
-  padding: 80px 40px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.section-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--navy);
-  margin-bottom: 8px;
-}
-
-.section-subtitle {
-  color: var(--gold);
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  margin-bottom: 48px;
-}
-
-/* サービスカード */
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 28px;
-  margin-top: 40px;
-}
-
-.service-card {
-  background: var(--white);
-  border-radius: 12px;
-  padding: 36px 28px;
   position: relative;
   overflow: hidden;
-  transition: box-shadow 0.25s, transform 0.25s;
-  box-shadow: 0 2px 12px rgba(26,39,68,0.06);
 }
-
-.service-card::before {
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.06;
+  background: var(--gold);
+  animation: float linear infinite;
+}
+.hero-shape:nth-child(1) {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  right: -80px;
+  animation-duration: 18s;
+}
+.hero-shape:nth-child(2) {
+  width: 250px;
+  height: 250px;
+  bottom: -60px;
+  left: 10%;
+  animation-duration: 24s;
+  animation-direction: reverse;
+}
+.hero-shape:nth-child(3) {
+  width: 160px;
+  height: 160px;
+  top: 30%;
+  left: 5%;
+  animation-duration: 20s;
+  opacity: 0.04;
+}
+@keyframes float {
+  0%   { transform: translateY(0) rotate(0deg); }
+  33%  { transform: translateY(-20px) rotate(120deg); }
+  66%  { transform: translateY(10px) rotate(240deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+/* ボタンホバー */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--navy), var(--gold));
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
 }
-
-.service-card:hover {
-  box-shadow: 0 12px 40px rgba(26,39,68,0.12);
-  transform: translateY(-6px);
+.btn-primary:hover::after {
+  width: 300px;
+  height: 300px;
 }
-
-.service-card-category {
-  display: inline-block;
-  font-size: 11px;
-  color: var(--gold);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  background: rgba(184,149,74,0.08);
-  padding: 4px 10px;
-  border-radius: 20px;
-  margin-bottom: 16px;
+/* ナビリンクホバー */
+.nav-links a {
+  position: relative;
 }
-
-.service-card h3 {
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--navy);
-  margin-bottom: 12px;
-  line-height: 1.4;
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width 0.3s ease;
 }
-
-.service-card p {
-  font-size: 14px;
-  color: var(--gray-600);
-  line-height: 1.9;
+.nav-links a:hover::after {
+  width: 100%;
 }
-
-.service-card-price {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--gray-200);
-  font-size: 13px;
-  color: var(--gray-600);
+/* サービスカードホバー強化 */
+.service-card-hover {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
-
-.service-card-price strong {
-  font-size: 22px;
-  color: var(--navy);
-  font-weight: 700;
-}
-
-/* フッター */
-.footer {
-  background: var(--navy);
-  color: rgba(255,255,255,0.6);
-  text-align: center;
-  padding: 40px;
-  font-size: 13px;
-}
-
-.footer-logo {
-  color: var(--white);
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-
-.footer-logo span {
-  color: var(--gold);
-}
-
-/* レスポンシブ */
-@media (max-width: 768px) {
-  .nav {
-    padding: 0 20px;
-  }
-  .nav-links {
-    display: none;
-  }
-  .hero {
-    padding: 60px 20px;
-  }
-  .section {
-    padding: 60px 20px;
-  }
-  .btn-outline {
-    margin-left: 0;
-    margin-top: 12px;
-  }
+.service-card-hover:hover {
+  box-shadow: 0 20px 48px rgba(26,39,68,0.15) !important;
+  transform: translateY(-8px) !important;
 }
