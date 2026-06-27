@@ -74,27 +74,35 @@ export default async function Home() {
         </section>
       )}
 
-      {sections.services !== false && services.length > 0 && (
-        <section className="section" style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
-          <p className="section-subtitle">SERVICES</p>
-          <h2 className="section-title">サービス一覧</h2>
-          <div className="card-grid" style={{ marginTop: '48px' }}>
-            {services.map((s, i) => (
-              <div key={i} className="card">
-                <p style={{ fontSize: '12px', color: 'var(--gold)', fontWeight: '600', letterSpacing: '0.1em', marginBottom: '12px' }}>
-                  {s['カテゴリ']}
-                </p>
-                <h3 style={{ fontSize: '18px', color: 'var(--navy)', marginBottom: '12px' }}>{s['サービス名']}</h3>
-                <p style={{ fontSize: '14px', color: 'var(--gray-600)', marginBottom: '16px' }}>{s['キャッチコピー']}</p>
-                <p style={{ fontSize: '14px', color: 'var(--gray-600)', lineHeight: '1.7' }}>{s['説明']}</p>
-                {s['価格'] && (
-                  <p style={{ marginTop: '16px', fontSize: '15px', color: 'var(--gold)', fontWeight: '600' }}>{s['価格']}</p>
-                )}
-              </div>
-            ))}
-          </div>
-          <div style={{ textAlign: 'center', marginTop: '48px' }}>
-            <a href="/services" className="btn-outline">サービス詳細を見る</a>
+      {sections.services !== false && (
+        <section style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+            <p className="section-subtitle">SERVICES</p>
+            <h2 className="section-title">サービス一覧</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px', marginTop: '40px' }}>
+              {services.map((service, i) => (
+                <div key={i} style={{ background: 'white', borderRadius: '12px', padding: '36px 28px', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 12px rgba(26,39,68,0.06)', transition: 'box-shadow 0.25s, transform 0.25s' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'linear-gradient(90deg, #1a2744, #b8954a)' }} />
+                  <p style={{ display: 'inline-block', fontSize: '11px', color: 'var(--gold)', letterSpacing: '0.12em', background: 'rgba(184,149,74,0.08)', padding: '4px 10px', borderRadius: '20px', marginBottom: '16px' }}>
+                    {service['カテゴリ']}
+                  </p>
+                  <h3 style={{ fontSize: '19px', fontWeight: '700', color: 'var(--navy)', marginBottom: '12px', lineHeight: '1.4' }}>
+                    {service['サービス名']}
+                  </h3>
+                  <p style={{ fontSize: '14px', color: 'var(--gray-600)', lineHeight: '1.9' }}>
+                    {service['キャッチコピー']}
+                  </p>
+                  {service['月額料金'] && (
+                    <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid var(--gray-200)', fontSize: '13px', color: 'var(--gray-600)' }}>
+                      月額 <strong style={{ fontSize: '22px', color: 'var(--navy)', fontWeight: '700' }}>¥{Number(service['月額料金']).toLocaleString()}</strong> 〜
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '40px' }}>
+              <a href="/services" className="btn-primary">サービス詳細を見る</a>
+            </div>
           </div>
         </section>
       )}
