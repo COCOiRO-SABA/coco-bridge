@@ -20,7 +20,7 @@ async function getServices() {
     return []
   }
 }
-async function getSections() {
+async function getSections() 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_GAS_API}?sheet=セクション設定`, { cache: 'no-store' })
     const data = await res.json()
@@ -84,10 +84,12 @@ export default async function Home() {
         </div>
         <h1>{config.catch_copy || 'デジタルで、ビジネスの橋を架ける。'}</h1>
         <p>{config.sub_copy || '課題の本質から考える、DX伴走パートナー'}</p>
-        <a href={config.cta_url || '/contact'} className="btn-primary">
-          {config.cta_text || '無料相談はこちら'}
-        </a>
-        <a href="/services" className="btn-outline">サービスを見る</a>
+        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+          <a href={config.cta_url || '/contact'} className="btn-primary">
+            {config.cta_text || '無料相談はこちら'}
+          </a>
+          <a href="/services" className="btn-outline">サービスを見る</a>
+        </div>
       </section>
       {/* コンセプト */}
       {sections.concept !== false && (
