@@ -48,17 +48,24 @@ export default function ContentPage() {
         if (values[f.key] !== original[f.key]) changed[f.key] = values[f.key]
       })
       if (Object.keys(changed).length > 0) {
-        await fetch(process.env.NEXT_PUBLIC_GAS_API, {
+        const res = await fetch(process.env.NEXT_PUBLIC_GAS_API, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({ sheet: 'サイト全体設定', action: 'update', data: changed }),
         })
-        setOriginal({ ...values })
+        const result = await res.json()
+        console.log('保存結果:', result)
+        if (result.success) {
+          setOriginal({ ...values })
+        } else {
+          alert('保存に失敗しました: ' + JSON.stringify(result))
+        }
       }
       setSaved(true)
-      setTimeout(() => setSaved(false), 2500)
+      setTimeout(() => setSaved(false), 3000)
     } catch (e) {
-      console.error(e)
+      console.error('保存エラー:', e)
+      alert('通信エラーが発生しました: ' + e.message)
     }
     setSaving(false)
   }
