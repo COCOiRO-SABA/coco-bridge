@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react'
 import AdminLayout from '../components/AdminLayout'
 
 const COLOR_PRESETS = [
-  { name: 'ネイビー×ゴールド（デフォルト）', primary: '#1a2744', accent: '#b8954a' },
-  { name: 'ディープグリーン×ゴールド', primary: '#1a3a2a', accent: '#c9a84c' },
-  { name: 'チャコール×テラコッタ', primary: '#2c2c2c', accent: '#c4704a' },
-  { name: 'ミッドナイトブルー×シルバー', primary: '#1a1f3c', accent: '#8899aa' },
+  { name: 'ネイビー×ゴールド（デフォルト）', color_main: '#1a2744', accent: '#b8954a' },
+  { name: 'ディープグリーン×ゴールド', color_main: '#1a3a2a', accent: '#c9a84c' },
+  { name: 'チャコール×テラコッタ', color_main: '#2c2c2c', accent: '#c4704a' },
+  { name: 'ミッドナイトブルー×シルバー', color_main: '#1a1f3c', accent: '#8899aa' },
 ]
 
 const SITE_FIELDS = [
@@ -46,12 +46,11 @@ export default function SettingsPage() {
 
   const applyPreset = (preset) => {
     setSelectedPreset(preset.name)
-    setValues(prev => ({ ...prev, color_primary: preset.primary, color_accent: preset.accent }))
+    setValues(prev => ({ ...prev, color_main: preset.color_main, color_accent: preset.accent }))
   }
 
   const handleSave = async () => {
     setSaving(true)
-
     try {
       const res = await fetch(process.env.NEXT_PUBLIC_GAS_API, {
         method: 'POST',
@@ -64,9 +63,14 @@ export default function SettingsPage() {
       })
       const result = await res.json()
       console.log('保存結果:', result)
-
       if (result.success) {
         setOriginal({ ...values })
+        // Vercel再ビルドトリガー
+        if (process.env.NEXT_PUBLIC_DEPLOY_HOOK) {
+          fetch(process.env.NEXT_PUBLIC_DEPLOY_HOOK, { method: 'POST' })
+            .then(() => console.log('再ビルドをトリガーしました'))
+            .catch(e => console.error('再ビルドエラー:', e))
+        }
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
       } else {
@@ -76,11 +80,10 @@ export default function SettingsPage() {
       console.error('保存エラー:', e)
       alert('通信エラーが発生しました: ' + e.message)
     }
-
     setSaving(false)
   }
 
-  const isDirty = [...SITE_FIELDS.map(f => f.key), 'color_primary', 'color_accent'].some(
+  const isDirty = [...SITE_FIELDS.map(f => f.key), 'color_main', 'color_accent'].some(
     key => values[key] !== original[key]
   )
 
@@ -140,12 +143,12 @@ export default function SettingsPage() {
                   key={preset.name}
                   onClick={() => applyPreset(preset)}
                   style={{
-                    border: selectedPreset === preset.name || (values.color_primary === preset.primary && values.color_accent === preset.accent) ? '2px solid #b8954a' : '2px solid #e0e0e0',
+                    border: selectedPreset === preset.name || (values.color_main === preset.color_main && values.color_accent === preset.accent) ? '2px solid #b8954a' : '2px solid #e0e0e0',
                     borderRadius: '8px', padding: '12px', background: 'white', cursor: 'pointer', textAlign: 'left',
                   }}
                 >
                   <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                    <div style={{ width: '32px', height: '32px', borderRadius: '6px', background: preset.primary }} />
+                    <div style={{ width: '32px', height: '32px', borderRadius: '6px', background: preset.color_main }} />
                     <div style={{ width: '32px', height: '32px', borderRadius: '6px', background: preset.accent }} />
                   </div>
                   <div style={{ fontSize: '12px', fontWeight: '600', color: '#1a2744' }}>{preset.name}</div>
@@ -156,22 +159,22 @@ export default function SettingsPage() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#1a2744', marginBottom: '6px' }}>
-                  プライマリカラー
-                  {values.color_primary !== original.color_primary && (
+                  メインカラー
+                  {values.color_main !== original.color_main && (
                     <span style={{ marginLeft: '8px', fontSize: '11px', color: '#b8954a', fontWeight: '400' }}>変更あり</span>
                   )}
                 </label>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                   <input
                     type="color"
-                    value={values.color_primary || '#1a2744'}
-                    onChange={e => { setValues(prev => ({ ...prev, color_primary: e.target.value })); setSelectedPreset(null) }}
+                    value={values.color_main || '#1a2744'}
+                    onChange={e => { setValues(prev => ({ ...prev, color_main: e.target.value })); setSelectedPreset(null) }}
                     style={{ width: '48px', height: '40px', border: '1px solid #e0e0e0', borderRadius: '6px', cursor: 'pointer', padding: '2px' }}
                   />
                   <input
                     type="text"
-                    value={values.color_primary || '#1a2744'}
-                    onChange={e => { setValues(prev => ({ ...prev, color_primary: e.target.value })); setSelectedPreset(null) }}
+                    value={values.color_main || '#1a2744'}
+                    onChange={e => { setValues(prev => ({ ...prev, color_main: e.target.value })); setSelectedPreset(null) }}
                     style={{ flex: 1, padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px', fontFamily: 'monospace' }}
                   />
                 </div>
@@ -200,7 +203,7 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <div style={{ marginTop: '20px', padding: '20px', borderRadius: '8px', background: values.color_primary || '#1a2744' }}>
+            <div style={{ marginTop: '20px', padding: '20px', borderRadius: '8px', background: values.color_main || '#1a2744' }}>
               <div style={{ fontSize: '18px', fontWeight: '700', color: 'white', marginBottom: '8px' }}>プレビュー</div>
               <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', marginBottom: '12px' }}>カラーテーマのプレビュー</div>
               <button style={{ background: values.color_accent || '#b8954a', color: 'white', border: 'none', padding: '8px 20px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
