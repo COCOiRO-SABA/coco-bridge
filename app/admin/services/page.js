@@ -54,17 +54,24 @@ export default function ServicesPage() {
     const rowIndex = index + 2
     setSaving(index)
     try {
-      await fetch(process.env.NEXT_PUBLIC_GAS_API, {
+      const res = await fetch(process.env.NEXT_PUBLIC_GAS_API, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({
           sheet: 'サービス', action: 'updateRow', rowIndex, data: editData,
         }),
       })
-      setServices(prev => prev.map((s, i) => i === index ? { ...editData } : s))
-      setEditingId(null)
+      const result = await res.json()
+      console.log('保存結果:', result)
+      if (result.success) {
+        setServices(prev => prev.map((s, i) => i === index ? { ...editData } : s))
+        setEditingId(null)
+      } else {
+        alert('保存に失敗しました: ' + JSON.stringify(result))
+      }
     } catch (e) {
-      console.error(e)
+      console.error('保存エラー:', e)
+      alert('通信エラーが発生しました: ' + e.message)
     }
     setSaving(null)
   }
