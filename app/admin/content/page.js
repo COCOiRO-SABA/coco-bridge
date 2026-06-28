@@ -15,62 +15,45 @@ const FIELDS = [
 ]
 
 export default function ContentPage() {
-  const [values, setValues] = useState({})
-  const [original, setOriginal] = useState({})
-  const [loading, setLoading] = useState(true)
+  const [config, setConfig] = useState({})
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
   useEffect(() => {
-    loadData()
+    fetch(`${process.env.NEXT_PUBLIC_GAS_API}?sheet=サイト全体設定`)
+      .then(r => r.json())
+      .then(data => {
+        const obj = {}
+        data.forEach(row => { obj[row['項目キー']] = row['値'] })
+        setConfig(obj)
+      })
   }, [])
-
-  const loadData = async () => {
-    setLoading(true)
-    try {
-      const res = await fetch(process.env.NEXT_PUBLIC_GAS_API + '?sheet=サイト全体設定')
-      const rows = await res.json()
-      const cfg = {}
-      rows.forEach(row => { cfg[row['項目キー']] = row['値'] })
-      setValues(cfg)
-      setOriginal(cfg)
-    } catch (e) {
-      console.error(e)
-    }
-    setLoading(false)
-  }
 
   const handleSave = async () => {
     setSaving(true)
     try {
-      const changed = {}
-      FIELDS.forEach(f => {
-        if (values[f.key] !== original[f.key]) changed[f.key] = values[f.key]
+      console.log('送信データ:', JSON.stringify({ action: 'update', sheet: 'サイト全体設定', data: config }))
+      const res = await fetch(process.env.NEXT_PUBLIC_GAS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'update', sheet: 'サイト全体設定', data: config }),
       })
-      if (Object.keys(changed).length > 0) {
-        const res = await fetch(process.env.NEXT_PUBLIC_GAS_API, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({ sheet: 'サイト全体設定', action: 'update', data: changed }),
-        })
-        const result = await res.json()
-        console.log('保存結果:', result)
-        if (result.success) {
-          setOriginal({ ...values })
-        } else {
-          alert('保存に失敗しました: ' + JSON.stringify(result))
+      const result = await res.json()
+      console.log('保存結果:', result)
+      if (result.success) {
+        if (process.env.NEXT_PUBLIC_DEPLOY_HOOK) {
+          await fetch(process.env.NEXT_PUBLIC_DEPLOY_HOOK, { method: 'POST' })
         }
+        setSaved(true)
+        setTimeout(() => setSaved(false), 3000)
+      } else {
+        alert('保存失敗: ' + JSON.stringify(result))
       }
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
     } catch (e) {
-      console.error('保存エラー:', e)
-      alert('通信エラーが発生しました: ' + e.message)
+      alert('エラー: ' + e.message)
     }
     setSaving(false)
   }
-
-  const isDirty = FIELDS.some(f => values[f.key] !== original[f.key])
 
   return (
     <AdminLayout current="content">
@@ -81,50 +64,68 @@ export default function ContentPage() {
         </div>
         <button
           onClick={handleSave}
-          disabled={saving || !isDirty}
+          disabled={saving}
           style={{
-            background: isDirty ? '#b8954a' : '#ccc', color: 'white', border: 'none',
-            padding: '10px 24px', borderRadius: '6px', fontSize: '14px', fontWeight: '600',
-            cursor: isDirty ? 'pointer' : 'default', transition: 'background 0.2s',
+            background: saved ? '#22c55e' : '#1a2744',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            padding: '10px 24px',
+            fontSize: '14px',
+            fontWeight: '600',
+            cursor: saving ? 'not-allowed' : 'pointer',
+            opacity: saving ? 0.7 : 1,
+            transition: 'background 0.3s',
           }}
         >
-          {saving ? '保存中...' : saved ? '✓ 保存しました' : '変更を保存'}
+          {saving ? '保存中...' : saved ? '保存しました ✓' : '保存する'}
         </button>
       </div>
 
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px', color: '#999' }}>読み込み中...</div>
-      ) : (
-        <div style={{ background: 'white', borderRadius: '10px', padding: '28px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', display: 'grid', gap: '24px' }}>
-          {FIELDS.map(field => (
-            <div key={field.key}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#1a2744', marginBottom: '8px' }}>
-                {field.label}
-                {values[field.key] !== original[field.key] && (
-                  <span style={{ marginLeft: '8px', fontSize: '11px', color: '#b8954a', fontWeight: '400' }}>変更あり</span>
-                )}
-              </label>
-              {field.type === 'textarea' ? (
-                <textarea
-                  value={values[field.key] || ''}
-                  onChange={e => setValues(prev => ({ ...prev, [field.key]: e.target.value }))}
-                  placeholder={field.placeholder}
-                  rows={4}
-                  style={{ width: '100%', padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }}
-                />
-              ) : (
-                <input
-                  type="text"
-                  value={values[field.key] || ''}
-                  onChange={e => setValues(prev => ({ ...prev, [field.key]: e.target.value }))}
-                  placeholder={field.placeholder}
-                  style={{ width: '100%', padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      <div style={{ display: 'grid', gap: '20px' }}>
+        {FIELDS.map(field => (
+          <div key={field.key} style={{ background: 'white', borderRadius: '12px', padding: '20px 24px', boxShadow: '0 1px 6px rgba(26,39,68,0.06)' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#1a2744', marginBottom: '8px' }}>
+              {field.label}
+            </label>
+            {field.type === 'textarea' ? (
+              <textarea
+                value={config[field.key] || ''}
+                onChange={e => setConfig({ ...config, [field.key]: e.target.value })}
+                placeholder={field.placeholder}
+                rows={4}
+                style={{
+                  width: '100%',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  padding: '10px 14px',
+                  fontSize: '14px',
+                  color: '#374151',
+                  resize: 'vertical',
+                  fontFamily: 'inherit',
+                  boxSizing: 'border-box',
+                }}
+              />
+            ) : (
+              <input
+                type="text"
+                value={config[field.key] || ''}
+                onChange={e => setConfig({ ...config, [field.key]: e.target.value })}
+                placeholder={field.placeholder}
+                style={{
+                  width: '100%',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  padding: '10px 14px',
+                  fontSize: '14px',
+                  color: '#374151',
+                  boxSizing: 'border-box',
+                }}
+              />
+            )}
+          </div>
+        ))}
+      </div>
     </AdminLayout>
   )
 }
