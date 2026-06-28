@@ -51,25 +51,32 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     setSaving(true)
+
     try {
-      const changed = {}
-      const allKeys = [...SITE_FIELDS.map(f => f.key), 'color_primary', 'color_accent']
-      allKeys.forEach(key => {
-        if (values[key] !== original[key]) changed[key] = values[key]
+      const res = await fetch(process.env.NEXT_PUBLIC_GAS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          action: 'update',
+          sheet: 'サイト全体設定',
+          data: values
+        }),
       })
-      if (Object.keys(changed).length > 0) {
-        await fetch(process.env.NEXT_PUBLIC_GAS_API, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({ sheet: 'サイト全体設定', action: 'update', data: changed }),
-        })
+      const result = await res.json()
+      console.log('保存結果:', result)
+
+      if (result.success) {
         setOriginal({ ...values })
+        setSaved(true)
+        setTimeout(() => setSaved(false), 3000)
+      } else {
+        alert('保存に失敗しました: ' + JSON.stringify(result))
       }
-      setSaved(true)
-      setTimeout(() => setSaved(false), 2500)
     } catch (e) {
-      console.error(e)
+      console.error('保存エラー:', e)
+      alert('通信エラーが発生しました: ' + e.message)
     }
+
     setSaving(false)
   }
 
