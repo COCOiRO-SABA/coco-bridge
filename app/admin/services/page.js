@@ -76,6 +76,15 @@ export default function ServicesPage() {
     setSaving(null)
   }
 
+  // スプレッドシートの編集可能フィールド（ヘッダー名に合わせる）
+  const EDIT_FIELDS = [
+    { key: 'サービス名', type: 'text' },
+    { key: 'カテゴリ', type: 'text' },
+    { key: 'キャッチコピー', type: 'text' },
+    { key: '本文', type: 'textarea' },
+    { key: '月額料金', type: 'text' },
+  ]
+
   return (
     <AdminLayout current="services">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
@@ -98,8 +107,8 @@ export default function ServicesPage() {
               <div key={index} style={{ background: 'white', borderRadius: '10px', padding: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', opacity: isOn ? 1 : 0.7 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '20px' }}>{service['アイコン'] || '🔧'}</span>
-                    <span style={{ fontSize: '15px', fontWeight: '700', color: '#1a2744' }}>{service['タイトル']}</span>
+                    <span style={{ fontSize: '20px' }}>🔧</span>
+                    <span style={{ fontSize: '15px', fontWeight: '700', color: '#1a2744' }}>{service['サービス名']}</span>
                     <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '20px', background: isOn ? '#e8f5e9' : '#f5f5f5', color: isOn ? '#27ae60' : '#999' }}>
                       {isOn ? '公開中' : '非公開'}
                     </span>
@@ -133,21 +142,21 @@ export default function ServicesPage() {
 
                 {isEditing ? (
                   <div style={{ display: 'grid', gap: '12px', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid #f0f0f0' }}>
-                    {['タイトル', 'アイコン', '説明', '詳細'].map(key => (
-                      <div key={key}>
-                        <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#666', marginBottom: '4px' }}>{key}</label>
-                        {key === '詳細' || key === '説明' ? (
+                    {EDIT_FIELDS.map(field => (
+                      <div key={field.key}>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#666', marginBottom: '4px' }}>{field.key}</label>
+                        {field.type === 'textarea' ? (
                           <textarea
-                            value={editData[key] || ''}
-                            onChange={e => setEditData(prev => ({ ...prev, [key]: e.target.value }))}
+                            value={editData[field.key] || ''}
+                            onChange={e => setEditData(prev => ({ ...prev, [field.key]: e.target.value }))}
                             rows={3}
                             style={{ width: '100%', padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '13px', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }}
                           />
                         ) : (
                           <input
                             type="text"
-                            value={editData[key] || ''}
-                            onChange={e => setEditData(prev => ({ ...prev, [key]: e.target.value }))}
+                            value={editData[field.key] || ''}
+                            onChange={e => setEditData(prev => ({ ...prev, [field.key]: e.target.value }))}
                             style={{ width: '100%', padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '13px', boxSizing: 'border-box' }}
                           />
                         )}
@@ -170,7 +179,7 @@ export default function ServicesPage() {
                     </div>
                   </div>
                 ) : (
-                  <p style={{ fontSize: '13px', color: '#666', margin: 0, lineHeight: '1.6' }}>{service['説明']}</p>
+                  <p style={{ fontSize: '13px', color: '#666', margin: 0, lineHeight: '1.6' }}>{service['キャッチコピー']}</p>
                 )}
               </div>
             )
