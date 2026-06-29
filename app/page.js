@@ -20,7 +20,7 @@ async function getServices() {
     return []
   }
 }
-async function getSections() 
+async function getSections() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_GAS_API}?sheet=セクション設定`, { cache: 'no-store' })
     const data = await res.json()
