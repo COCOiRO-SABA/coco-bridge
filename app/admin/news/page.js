@@ -1,4 +1,11 @@
 'use client'
+
+function formatDate(value) {
+  if (!value) return ''
+  const d = new Date(value)
+  if (isNaN(d.getTime())) return String(value)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
 import { useState, useEffect } from 'react'
 import AdminLayout from '../components/AdminLayout'
 export default function NewsPage() {
@@ -7,7 +14,7 @@ export default function NewsPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [adding, setAdding] = useState(false)
-  const [newPost, setNewPost] = useState({ タイトル: '', カテゴリ: 'お知らせ', 本文: '', 公開日: new Date().toLocaleDateString('ja-JP'), ステータス: '公開' })
+  const [newPost, setNewPost] = useState({ タイトル: '', カテゴリ: 'お知らせ', 本文: '', 公開日: new Date().toISOString().split('T')[0], ステータス: '公開' })
   useEffect(() => {
     if (sessionStorage.getItem('admin_authed') !== 'true') { window.location.href = '/admin'; return }
     loadData()
@@ -15,7 +22,7 @@ export default function NewsPage() {
   const loadData = async () => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_GAS_API}?sheet=お知らせ`)
     const data = await res.json()
-    setPosts(data)
+    setPosts(data.map(p => ({ ...p, 公開日: formatDate(p['公開日']) })))
     setLoading(false)
   }
   const updatePost = (index, key, value) => {
@@ -80,7 +87,7 @@ export default function NewsPage() {
                 <option>コラム</option>
                 <option>プレスリリース</option>
               </select>
-              <input type="text" placeholder="公開日" value={newPost.公開日} onChange={e => setNewPost({ ...newPost, 公開日: e.target.value })}
+              <input type="date" value={newPost.公開日} onChange={e => setNewPost({ ...newPost, 公開日: e.target.value })}
                 style={{ padding: '10px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px' }} />
             </div>
             <textarea rows={3} placeholder="本文" value={newPost.本文} onChange={e => setNewPost({ ...newPost, 本文: e.target.value })}
@@ -102,7 +109,8 @@ export default function NewsPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <span style={{ fontSize: '12px', color: '#b8954a', background: 'rgba(184,149,74,0.1)', padding: '2px 10px', borderRadius: '20px' }}>{post['カテゴリ']}</span>
-                <span style={{ fontSize: '12px', color: '#999' }}>{post['公開日']}</span>
+                <input type="date" value={post['公開日'] || ''} onChange={e => updatePost(i, '公開日', e.target.value)}
+                  style={{ fontSize: '12px', color: '#999', border: '1px solid #e0e0e0', borderRadius: '4px', padding: '2px 8px' }} />
               </div>
               <select value={post['ステータス'] || '公開'} onChange={e => updatePost(i, 'ステータス', e.target.value)}
                 style={{ padding: '4px 10px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '12px', color: post['ステータス'] === '公開' ? '#27ae60' : '#999' }}>
