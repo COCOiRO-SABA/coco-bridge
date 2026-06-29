@@ -1,44 +1,47 @@
-import FadeIn from '../components/FadeIn'
-
-const GAS_API = process.env.NEXT_PUBLIC_GAS_API
-
-async function getSiteConfig() {
-  const res = await fetch(`${GAS_API}?sheet=サイト全体設定`, { cache: 'no-store' })
-  const data = await res.json()
-  const config = {}
-  data.forEach(row => { config[row['項目キー']] = row['値'] })
-  return config
-}
-
 async function getAccess() {
-  const res = await fetch(`${GAS_API}?sheet=アクセス`, { cache: 'no-store' })
-  const data = await res.json()
-  const access = {}
-  data.forEach(row => { access[row['項目キー']] = row['値'] })
-  return access
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_GAS_API}?sheet=アクセス`, { cache: 'no-store' })
+    const data = await res.json()
+    const access = {}
+    data.forEach(row => { access[row['項目キー']] = row['値'] })
+    return access
+  } catch (e) {
+    return {}
+  }
 }
-
+async function getConfig() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_GAS_API}?sheet=サイト全体設定`, { cache: 'no-store' })
+    const data = await res.json()
+    const config = {}
+    data.forEach(row => { config[row['項目キー']] = row['値'] })
+    return config
+  } catch (e) {
+    return {}
+  }
+}
 export const metadata = {
-  title: 'アクセス | COCO&Bridge',
-  description: 'COCO&Bridgeへのアクセス情報です。',
+  title: 'アクセス｜COCO&Bridge',
 }
-
-const ACCESS_LABELS = {
-  address: '住所',
-  nearest_station: '最寄り駅',
-  business_hours: '営業時間',
-  closed_day: '定休日',
-  parking: '駐車場',
-  tel: '電話番号',
-}
-
 export default async function AccessPage() {
-  const [config, access] = await Promise.all([getSiteConfig(), getAccess()])
-
-  const rows = Object.entries(ACCESS_LABELS)
-    .filter(([key]) => access[key])
-    .map(([key, label]) => ({ label, value: access[key] }))
-
+  const [access, config] = await Promise.all([getAccess(), getConfig()])
+  const extractMapSrc = (value) => {
+    if (!value) return null
+    if (value.startsWith('http')) return value
+    const match = value.match(/src="([^"]+)"/)
+    return match ? match[1] : null
+  }
+  const mapSrc = extractMapSrc(access.map_url)
+  const tableItems = [
+    { label: '住所', value: access.address, show: !!access.address },
+    { label: '最寄り駅', value: access.nearest_station, show: access.show_station !== 'FALSE' && !!access.nearest_station },
+    { label: '営業時間', value: access.business_hours, show: access.show_hours !== 'FALSE' && !!access.business_hours },
+    { label: '駐車場', value: access.parking, show: access.show_parking !== 'FALSE' && !!access.parking },
+    { label: '電話番号', value: access.tel, show: !!access.tel },
+    { label: 'FAX', value: access.fax, show: !!access.fax },
+    { label: 'メール', value: access.email, show: !!access.email },
+    { label: 'アクセス方法', value: access.access_note, show: !!access.access_note },
+  ].filter(item => item.show)
   return (
     <>
       <nav className="nav">
@@ -46,64 +49,64 @@ export default async function AccessPage() {
         <ul className="nav-links">
           <li><a href="/services">サービス</a></li>
           <li><a href="/about">私たちについて</a></li>
-          <li><a href="/staff">スタッフ</a></li>
           <li><a href="/blog">ブログ</a></li>
           <li><a href="/contact">お問い合わせ</a></li>
         </ul>
       </nav>
-
-      <section style={{ background: 'var(--navy)', padding: '80px 40px 64px', textAlign: 'center' }}>
-        <p className="section-subtitle" style={{ color: 'rgba(255,255,255,0.6)' }}>ACCESS</p>
-        <h1 style={{ fontSize: '36px', fontWeight: '700', color: 'white', marginTop: '8px' }}>アクセス</h1>
+      <section className="hero" style={{ padding: '60px 40px' }}>
+        <div className="hero-bg">
+          <div className="hero-shape" /><div className="hero-shape" /><div className="hero-shape" />
+        </div>
+        <h1>アクセス<span>情報</span></h1>
+        <p>{access.hero_message || 'お気軽にお問い合わせください。'}</p>
       </section>
-
       <section className="section">
-        <div style={{ maxWidth: '760px', margin: '0 auto' }}>
-          <FadeIn>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px' }}>
+        {access.visit_message && (
+          <div style={{ background: 'rgba(184,149,74,0.08)', border: '1px solid var(--gold)', borderRadius: '8px', padding: '16px 20px', marginBottom: '40px', fontSize: '14px', color: 'var(--navy)', lineHeight: '1.7' }}>
+            💡 {access.visit_message}
+          </div>
+        )}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', flexWrap: 'wrap' }}>
+          <div>
+            <p className="section-subtitle">ACCESS</p>
+            <h2 className="section-title">所在地・営業情報</h2>
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '24px' }}>
               <tbody>
-                {rows.map((row, i) => (
+                {tableItems.map((item, i) => (
                   <tr key={i} style={{ borderBottom: '1px solid var(--gray-200)' }}>
-                    <th style={{
-                      width: '140px', padding: '20px 16px 20px 0',
-                      fontWeight: '700', color: 'var(--navy)',
-                      verticalAlign: 'top', textAlign: 'left', whiteSpace: 'nowrap',
-                    }}>
-                      {row.label}
+                    <th style={{ padding: '14px 16px', textAlign: 'left', color: 'var(--navy)', fontWeight: '600', width: '140px', fontSize: '14px', verticalAlign: 'top' }}>
+                      {item.label}
                     </th>
-                    <td style={{ padding: '20px 0', color: 'var(--gray-600)', lineHeight: '1.8' }}>
-                      {row.value}
+                    <td style={{ padding: '14px 16px', color: 'var(--gray-600)', fontSize: '14px', whiteSpace: 'pre-line', lineHeight: '1.7' }}>
+                      {item.value}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </FadeIn>
-
-          {access.map_url && (
-            <FadeIn delay={1}>
-              <div style={{ marginTop: '48px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(26,39,68,0.08)' }}>
-                <iframe
-                  src={access.map_url}
-                  width="100%"
-                  height="400"
-                  style={{ border: 0, display: 'block' }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-            </FadeIn>
-          )}
-
-          <FadeIn delay={2}>
-            <div style={{ textAlign: 'center', marginTop: '48px' }}>
+            <div style={{ marginTop: '32px' }}>
               <a href="/contact" className="btn-primary">お問い合わせはこちら</a>
             </div>
-          </FadeIn>
+          </div>
+          <div>
+            {mapSrc ? (
+              <iframe
+                src={mapSrc}
+                width="100%"
+                height="400"
+                style={{ border: 0, borderRadius: '8px', display: 'block' }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            ) : (
+              <div style={{ width: '100%', height: '400px', background: 'var(--gray-100)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gray-600)', fontSize: '14px' }}>
+                地図を設定してください
+              </div>
+            )}
+          </div>
         </div>
       </section>
-
       <footer className="footer">
         <div className="footer-logo">COCO<span>&</span>Bridge</div>
         <p>© {new Date().getFullYear()} {config.footer_text || 'COCO&Bridge株式会社'}</p>
