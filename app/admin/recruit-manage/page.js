@@ -3,13 +3,12 @@ import { useState, useEffect } from 'react'
 import AdminLayout from '../components/AdminLayout'
 
 const EMPTY_JOB = {
-  'タイトル': '',
-  '職種': '',
-  '雇用形態': '',
-  '仕事内容': '',
-  '給与': '',
-  '勤務時間': '',
-  '資格・経験': '',
+  '職種名': '',
+  '雇用形態': '業務委託',
+  '業務内容': '',
+  '応募条件': '',
+  '給与': '要相談',
+  '勤務地': '',
   '公開': 'TRUE',
 }
 
@@ -101,12 +100,16 @@ export default function RecruitManagePage() {
   }
 
   async function handleAdd() {
+    if (!newJob['職種名']) {
+      alert('職種名を入力してください')
+      return
+    }
     setAddSaving(true)
     try {
       const res = await fetch(process.env.NEXT_PUBLIC_GAS_API, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ action: 'addRow', sheet: '採用情報', row: newJob }),
+        body: JSON.stringify({ action: 'addRow', sheet: '採用情報', data: newJob }),
       })
       const result = await res.json()
       if (result.success) {
@@ -154,11 +157,10 @@ export default function RecruitManagePage() {
           <h2 style={{ fontSize: '16px', fontWeight: '700', color: '#1a2744', marginBottom: '16px' }}>新規求人を追加</h2>
           <div style={{ display: 'grid', gap: '12px' }}>
             {[
-              { key: 'タイトル', label: 'タイトル（例：ITサポートスタッフ募集）' },
-              { key: '職種', label: '職種' },
-              { key: '雇用形態', label: '雇用形態（例：正社員・パート）' },
-              { key: '給与', label: '給与' },
-              { key: '勤務時間', label: '勤務時間' },
+              { key: '職種名', label: '職種名（例：ITサポートスタッフ）' },
+              { key: '雇用形態', label: '雇用形態（例：正社員・業務委託）' },
+              { key: '給与', label: '給与（例：要相談・月30万円〜）' },
+              { key: '勤務地', label: '勤務地' },
             ].map(f => (
               <div key={f.key}>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#666', marginBottom: '4px' }}>{f.label}</label>
@@ -171,8 +173,8 @@ export default function RecruitManagePage() {
               </div>
             ))}
             {[
-              { key: '仕事内容', label: '仕事内容' },
-              { key: '資格・経験', label: '資格・経験（任意）' },
+              { key: '業務内容', label: '業務内容' },
+              { key: '応募条件', label: '応募条件（任意）' },
             ].map(f => (
               <div key={f.key}>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#666', marginBottom: '4px' }}>{f.label}</label>
@@ -198,7 +200,7 @@ export default function RecruitManagePage() {
           <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
             <button
               onClick={handleAdd}
-              disabled={addSaving || !newJob['タイトル']}
+              disabled={addSaving || !newJob['職種名']}
               style={{ background: addSaving ? '#999' : '#b8954a', color: 'white', border: 'none', padding: '10px 24px', borderRadius: '6px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}
             >
               {addSaving ? '追加中...' : '追加する'}
@@ -225,11 +227,10 @@ export default function RecruitManagePage() {
                 <div>
                   <div style={{ display: 'grid', gap: '10px', marginBottom: '16px' }}>
                     {[
-                      { key: 'タイトル', label: 'タイトル' },
-                      { key: '職種', label: '職種' },
+                      { key: '職種名', label: '職種名' },
                       { key: '雇用形態', label: '雇用形態' },
                       { key: '給与', label: '給与' },
-                      { key: '勤務時間', label: '勤務時間' },
+                      { key: '勤務地', label: '勤務地' },
                     ].map(f => (
                       <div key={f.key}>
                         <label style={{ display: 'block', fontSize: '11px', fontWeight: '600', color: '#666', marginBottom: '3px' }}>{f.label}</label>
@@ -242,8 +243,8 @@ export default function RecruitManagePage() {
                       </div>
                     ))}
                     {[
-                      { key: '仕事内容', label: '仕事内容' },
-                      { key: '資格・経験', label: '資格・経験' },
+                      { key: '業務内容', label: '業務内容' },
+                      { key: '応募条件', label: '応募条件' },
                     ].map(f => (
                       <div key={f.key}>
                         <label style={{ display: 'block', fontSize: '11px', fontWeight: '600', color: '#666', marginBottom: '3px' }}>{f.label}</label>
@@ -288,7 +289,7 @@ export default function RecruitManagePage() {
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px', flexWrap: 'wrap' }}>
                         <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#1a2744', margin: 0 }}>
-                          {job['タイトル'] || '（タイトルなし）'}
+                          {job['職種名'] || '（職種名なし）'}
                         </h3>
                         <span style={{
                           background: job['公開'] === 'TRUE' ? '#e8f5e9' : '#fafafa',
@@ -300,14 +301,13 @@ export default function RecruitManagePage() {
                         </span>
                       </div>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '6px', marginBottom: '8px' }}>
-                        {job['職種'] && <span style={{ fontSize: '13px', color: '#555' }}>📋 {job['職種']}</span>}
                         {job['雇用形態'] && <span style={{ fontSize: '13px', color: '#555' }}>👔 {job['雇用形態']}</span>}
                         {job['給与'] && <span style={{ fontSize: '13px', color: '#555' }}>💴 {job['給与']}</span>}
-                        {job['勤務時間'] && <span style={{ fontSize: '13px', color: '#555' }}>🕐 {job['勤務時間']}</span>}
+                        {job['勤務地'] && <span style={{ fontSize: '13px', color: '#555' }}>📍 {job['勤務地']}</span>}
                       </div>
-                      {job['仕事内容'] && (
+                      {job['業務内容'] && (
                         <p style={{ fontSize: '13px', color: '#666', margin: 0, lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
-                          {job['仕事内容'].slice(0, 120)}{job['仕事内容'].length > 120 ? '…' : ''}
+                          {job['業務内容'].slice(0, 120)}{job['業務内容'].length > 120 ? '…' : ''}
                         </p>
                       )}
                     </div>
