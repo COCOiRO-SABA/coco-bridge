@@ -1,5 +1,12 @@
 const GAS_API = process.env.NEXT_PUBLIC_GAS_API
 
+function formatDate(value) {
+  if (!value) return ''
+  const d = new Date(value)
+  if (isNaN(d.getTime())) return String(value)
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
+}
+
 async function getSiteConfig() {
   const res = await fetch(`${GAS_API}?sheet=サイト全体設定`, { cache: 'no-store' })
   const data = await res.json()
@@ -127,7 +134,7 @@ export default async function Home() {
           <div style={{ maxWidth: '760px', margin: '32px auto 0', display: 'grid', gap: '8px' }}>
             {news.map((post, i) => (
               <a key={i} href={`/news/${post['スラッグ']}`} style={{ textDecoration: 'none', background: 'white', borderRadius: '8px', padding: '20px 24px', display: 'flex', gap: '16px', alignItems: 'center' }}>
-                <span style={{ fontSize: '13px', color: 'var(--gray-600)', whiteSpace: 'nowrap' }}>{post['公開日']}</span>
+                <span style={{ fontSize: '13px', color: 'var(--gray-600)', whiteSpace: 'nowrap' }}>{formatDate(post['公開日'])}</span>
                 <span style={{ fontSize: '12px', color: 'var(--gold)', border: '1px solid var(--gold)', padding: '2px 10px', borderRadius: '20px', whiteSpace: 'nowrap' }}>{post['カテゴリ']}</span>
                 <span style={{ fontSize: '15px', color: 'var(--navy)' }}>{post['タイトル']}</span>
               </a>
