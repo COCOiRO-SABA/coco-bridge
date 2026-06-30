@@ -39,7 +39,7 @@ export default function ContactPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!agreed) {
-      setError('ãã©ã¤ãâ¥ã·ã¼ããªã·ã¼ã«åæãã¦ãã ããã')
+      setError('プライバシーポリシーに同意してください。')
       return
     }
     setStatus('sending')
@@ -58,11 +58,11 @@ export default function ContactPage() {
       if (result.success) {
         setStatus('done')
       } else {
-        throw new Error(result.error || 'éä¿¡ã«å¤±æãã¾ãã')
+        throw new Error(result.error || '送信に失敗しました。')
       }
     } catch (err) {
       setStatus('')
-      setError('éä¿¡ã«å¤±æãã¾ãããæéãããã¦ååº¦ãè©¦ããã ããã')
+      setError('送信に失敗しました。時間をおいて再度お試しください。')
     }
   }
 
@@ -90,12 +90,12 @@ export default function ContactPage() {
   return (
     <>
       <nav className="nav">
-        <a href="/" className="nav-logo">COCO<span>&</span>Bridge</a>
+        <a href="/" className="nav-logo">COCO<span>&amp;</span>Bridge</a>
         <ul className="nav-links">
-          <li><a href="/services">ãµã¼ãã¹</a></li>
-          <li><a href="/about">ç§ãã¡ã«ã¤ãã¦</a></li>
-          <li><a href="/news">ãç¥ãã</a></li>
-          <li><a href="/contact">ãåãåãã</a></li>
+          <li><a href="/services">サービス</a></li>
+          <li><a href="/about">私たちについて</a></li>
+          <li><a href="/news">お知らせ</a></li>
+          <li><a href="/contact">お問い合わせ</a></li>
         </ul>
       </nav>
 
@@ -105,8 +105,8 @@ export default function ContactPage() {
           <div className="hero-shape" />
           <div className="hero-shape" />
         </div>
-        <h1>ãåã<span>åãã</span></h1>
-        <p>ã¾ãã¯ãæ°è»½ã«ãç¸è«ãã ãããéå¸¸2å¶æ¥­æ¥ä»¥åã«è¿ä¿¡ãã¾ãã</p>
+        <h1>お問い<span>合わせ</span></h1>
+        <p>まずはお気軽にご相談ください。通常2営業日以内に返信します。</p>
       </section>
 
       <section style={{ padding: '80px 40px', maxWidth: '700px', margin: '0 auto' }}>
@@ -114,14 +114,14 @@ export default function ContactPage() {
           <div style={{ textAlign: 'center', padding: '60px 0' }}>
             <div style={{ fontSize: '56px', marginBottom: '24px' }}>&#x2705;</div>
             <p style={{ fontSize: '22px', color: '#1a2744', fontWeight: '700', marginBottom: '12px' }}>
-              éä¿¡å®äºãã¾ãã
+              送信完了しました
             </p>
             <p style={{ color: '#666', lineHeight: '1.8' }}>
-              åãåãããããã¨ããããã¾ãã<br />
-              2å¶æ¥­æ¥ä»¥åã«é£çµ¡ãã¾ãã
+              お問い合わせいただきありがとうございます。<br />
+              2営業日以内にご連絡します
             </p>
             <a href="/" className="btn-primary" style={{ display: 'inline-block', marginTop: '32px' }}>
-              ãããã«æ»ã
+              ホームに戻る
             </a>
           </div>
         ) : (
@@ -134,32 +134,32 @@ export default function ContactPage() {
 
             <div>
               <label style={labelStyle}>
-                ãåå<span style={{ color: '#b8954a', marginLeft: '4px' }}>*</span>
+                お名前<span style={{ color: '#b8954a', marginLeft: '4px' }}>*</span>
               </label>
               <input
                 type="text"
                 required
                 value={form.name}
                 onChange={e => setForm({ ...form, name: e.target.value })}
-                placeholder="ç°æ æµ"
+                placeholder="田中浩二"
                 style={inputStyle}
               />
             </div>
 
             <div>
-              <label style={labelStyle}>ä¼ç¤¾å</label>
+              <label style={labelStyle}>会社名</label>
               <input
                 type="text"
                 value={form.company}
                 onChange={e => setForm({ ...form, company: e.target.value })}
-                placeholder="æ ªå¼ä¼ç¤¾ãã"
+                placeholder="株式会社〇〇"
                 style={inputStyle}
               />
             </div>
 
             <div>
               <label style={labelStyle}>
-                ã¡ã¼ã«ã¢ãã¬ã¹<span style={{ color: '#b8954a', marginLeft: '4px' }}>*</span>
+                メールアドレス<span style={{ color: '#b8954a', marginLeft: '4px' }}>*</span>
               </label>
               <input
                 type="email"
@@ -172,7 +172,7 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <label style={labelStyle}>é»è©±çªå·</label>
+              <label style={labelStyle}>電話番号</label>
               <input
                 type="tel"
                 value={form.phone}
@@ -184,14 +184,14 @@ export default function ContactPage() {
 
             <div>
               <label style={labelStyle}>
-                åãåããåå®¹<span style={{ color: '#b8954a', marginLeft: '4px' }}>*</span>
+                お問い合わせ内容<span style={{ color: '#b8954a', marginLeft: '4px' }}>*</span>
               </label>
               <textarea
                 required
                 rows={6}
                 value={form.message}
                 onChange={e => setForm({ ...form, message: e.target.value })}
-                placeholder="ãµã¼ãã¹ã«ã¤ãã¦ã®ãè³ªåããè¦ç©ããä¾é ¼ãªã©ããæ°è»½ã«ã©ããã"
+                placeholder="サービスについてのご質問、見積もり依頼など、お気軽にどうぞ"
                 style={{ ...inputStyle, resize: 'vertical', lineHeight: '1.7' }}
               />
             </div>
@@ -205,8 +205,8 @@ export default function ContactPage() {
                 style={{ marginTop: '3px', width: '16px', height: '16px', cursor: 'pointer', flexShrink: 0 }}
               />
               <label htmlFor="privacy" style={{ fontSize: '14px', color: '#444', lineHeight: '1.6', cursor: 'pointer' }}>
-                <a href="/privacy" target="_blank" style={{ color: '#b8954a', textDecoration: 'underline' }}>ãã©ã¤ãã·ã¼ããªã·ã¼</a>
-                ã«åæãã¾ã<span style={{ color: '#b8954a', marginLeft: '4px' }}>*</span>
+                <a href="/privacy" target="_blank" style={{ color: '#b8954a', textDecoration: 'underline' }}>プライバシーポリシー</a>
+                に同意します<span style={{ color: '#b8954a', marginLeft: '4px' }}>*</span>
               </label>
             </div>
 
@@ -223,22 +223,22 @@ export default function ContactPage() {
                 opacity: status === 'sending' || !agreed ? 0.6 : 1,
               }}
             >
-              {status === 'sending' ? 'éä¿¡ä¸­...' : 'éä¿¡ãã'}
+              {status === 'sending' ? '送信中...' : '送信する'}
             </button>
 
             <p style={{ fontSize: '12px', color: '#999', textAlign: 'center', lineHeight: '1.6' }}>
-              ãã®ãµã¤ãã¯reCAPTCHAã§ä¿è­·ããã¦ãããGoogleã®
-              <a href="https://policies.google.com/privacy" target="_blank" style={{ color: '#999' }}>ãã©ã¤ãã·ã¼ããªã·ã¼</a>ã¨
-              <a href="https://policies.google.com/terms" target="_blank" style={{ color: '#999' }}>å©ç¨è¦ç´</a>
-              ãé©ç¨ããã¾ãã
+              このサイトはreCAPTCHAで保護されており、Googleの
+              <a href="https://policies.google.com/privacy" target="_blank" style={{ color: '#999' }}>プライバシーポリシー</a>と
+              <a href="https://policies.google.com/terms" target="_blank" style={{ color: '#999' }}>利用規約</a>
+              が適用されます。
             </p>
           </form>
         )}
       </section>
 
       <footer className="footer">
-        <div className="footer-logo">COCO<span>&</span>Bridge</div>
-        <p>&#169; {new Date().getFullYear()} COCO&Bridgeæ ªå¼ä¼ç¤¾</p>
+        <div className="footer-logo">COCO<span>&amp;</span>Bridge</div>
+        <p>&#169; {new Date().getFullYear()} COCO&amp;Bridge株式会社</p>
       </footer>
     </>
   )
