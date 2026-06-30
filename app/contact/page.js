@@ -85,8 +85,7 @@ export default function ContactPage() {
     fontWeight: '600',
     color: '#1a2744',
     marginBottom: '8px',
-  }a}
-
+  }
   return (
     <>
       <nav className="nav">
