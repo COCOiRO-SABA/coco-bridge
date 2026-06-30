@@ -74,3 +74,43 @@ export default async function AccessPage() {
               <tbody>
                 {tableItems.map((item, i) => (
                   <tr key={i} style={{ borderBottom: '1px solid var(--gray-200)' }}>
+                    <th style={{ padding: '14px 16px', textAlign: 'left', color: 'var(--navy)', fontWeight: '600', width: '140px', fontSize: '14px', verticalAlign: 'top' }}>
+                      {item.label}
+                    </th>
+                    <td style={{ padding: '14px 16px', color: 'var(--gray-600)', fontSize: '14px', whiteSpace: 'pre-line', lineHeight: '1.7' }}>
+                      {item.value}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ marginTop: '32px' }}>
+              <a href="/contact" className="btn-primary">お問い合わせはこちら</a>
+            </div>
+          </div>
+          <div>
+            {mapSrc ? (
+              <iframe
+                src={mapSrc}
+                width="100%"
+                height="400"
+                style={{ border: 0, borderRadius: '8px', display: 'block' }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            ) : (
+              <div style={{ width: '100%', height: '400px', background: 'var(--gray-100)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gray-600)', fontSize: '14px' }}>
+                地図を設定してください
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+      <footer className="footer">
+        <div className="footer-logo">COCO<span>&</span>Bridge</div>
+        <p>© {new Date().getFullYear()} {config.footer_text || 'COCO&Bridge株式会社'}</p>
+      </footer>
+    </>
+  )
+}
