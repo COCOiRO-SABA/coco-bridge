@@ -14,7 +14,14 @@ export default function NewsPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [adding, setAdding] = useState(false)
-  const [newPost, setNewPost] = useState({ タイトル: '', カテゴリ: 'お知らせ', 本文: '', 公開日: new Date().toISOString().split('T')[0], スラッグ: new Date().toISOString().split('T')[0], ステータス: '公開' })
+  const [newPost, setNewPost] = useState({
+    タイトル: '',
+    カテゴリ: 'お知らせ',
+    本文: '',
+    公開日: new Date().toISOString().split('T')[0],
+    ステータス: '公開',
+    スラッグ: new Date().toISOString().split('T')[0],
+  })
   useEffect(() => {
     if (sessionStorage.getItem('admin_authed') !== 'true') { window.location.href = '/admin'; return }
     loadData()
@@ -50,7 +57,7 @@ export default function NewsPage() {
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ action: 'addRow', sheet: 'お知らせ', data: newPost }),
     })
-    setNewPost({ タイトル: '', カテゴリ: 'お知らせ', 本文: '', 公開日: new Date().toLocaleDateString('ja-JP'), ステータス: '公開' })
+    setNewPost({ タイトル: '', カテゴリ: 'お知らせ', 本文: '', 公開日: new Date().toISOString().split('T')[0], ステータス: '公開', スラッグ: new Date().toISOString().split('T')[0] })
     setAdding(false)
     loadData()
   }
@@ -63,12 +70,10 @@ export default function NewsPage() {
           <p style={{ fontSize: '13px', color: '#999' }}>記事の追加・編集・公開設定</p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={() => setAdding(!adding)}
-            style={{ background: '#1a2744', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
+          <button onClick={() => setAdding(!adding)} style={{ background: '#1a2744', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
             + 新規追加
           </button>
-          <button onClick={handleSave} disabled={saving}
-            style={{ background: saved ? '#27ae60' : '#b8954a', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
+          <button onClick={handleSave} disabled={saving} style={{ background: saved ? '#27ae60' : '#b8954a', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
             {saving ? '保存中...' : saved ? '✅ 保存' : '変更を保存'}
           </button>
         </div>
@@ -79,8 +84,8 @@ export default function NewsPage() {
           <div style={{ display: 'grid', gap: '10px' }}>
             <input placeholder="タイトル" value={newPost.タイトル} onChange={e => setNewPost({ ...newPost, タイトル: e.target.value })}
               style={{ padding: '10px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px' }} />
-        <input placeholder="スラッグ（例：2026-06-30）" value={newPost.スラッグ || ''} onChange={e => setNewPost({ ...newPost, スラッグ: e.target.value })}
-                      style={{ padding: '10px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px' }} />
+            <input placeholder="スラッグ（例: 2026-06-29）" value={newPost.スラッグ} onChange={e => setNewPost({ ...newPost, スラッグ: e.target.value })}
+              style={{ padding: '10px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px' }} />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               <select value={newPost.カテゴリ} onChange={e => setNewPost({ ...newPost, カテゴリ: e.target.value })}
                 style={{ padding: '10px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px' }}>
@@ -123,9 +128,8 @@ export default function NewsPage() {
             </div>
             <input value={post['タイトル'] || ''} onChange={e => updatePost(i, 'タイトル', e.target.value)}
               style={{ width: '100%', padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '15px', fontWeight: '600', boxSizing: 'border-box', marginBottom: '8px' }} />
-          <input value={post['スラッグ'] || ''} onChange={e => updatePost(i, 'スラッグ', e.target.value)}
-                        placeholder="スラッグ（例：2026-06-30）"
-                        style={{ width: '100%', padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box', marginBottom: '8px' }} />
+            <input value={post['スラッグ'] || ''} onChange={e => updatePost(i, 'スラッグ', e.target.value)} placeholder="スラッグ（URL）"
+              style={{ width: '100%', padding: '6px 10px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '12px', color: '#666', marginBottom: '8px', boxSizing: 'border-box' }} />
             <textarea rows={2} value={post['本文'] || ''} onChange={e => updatePost(i, '本文', e.target.value)}
               style={{ width: '100%', padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }} />
           </div>
