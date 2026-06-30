@@ -14,7 +14,7 @@ export default function NewsPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [adding, setAdding] = useState(false)
-  const [newPost, setNewPost] = useState({ タイトル: '', カテゴリ: 'お知らせ', 本文: '', 公開日: new Date().toISOString().split('T')[0], ステータス: '公開' })
+  const [newPost, setNewPost] = useState({ タイトル: '', カテゴリ: 'お知らせ', 本文: '', 公開日: new Date().toISOString().split('T')[0], スラッグ: new Date().toISOString().split('T')[0], ステータス: '公開' })
   useEffect(() => {
     if (sessionStorage.getItem('admin_authed') !== 'true') { window.location.href = '/admin'; return }
     loadData()
@@ -79,6 +79,8 @@ export default function NewsPage() {
           <div style={{ display: 'grid', gap: '10px' }}>
             <input placeholder="タイトル" value={newPost.タイトル} onChange={e => setNewPost({ ...newPost, タイトル: e.target.value })}
               style={{ padding: '10px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px' }} />
+        <input placeholder="スラッグ（例：2026-06-30）" value={newPost.スラッグ || ''} onChange={e => setNewPost({ ...newPost, スラッグ: e.target.value })}
+                      style={{ padding: '10px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px' }} />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               <select value={newPost.カテゴリ} onChange={e => setNewPost({ ...newPost, カテゴリ: e.target.value })}
                 style={{ padding: '10px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px' }}>
@@ -121,6 +123,9 @@ export default function NewsPage() {
             </div>
             <input value={post['タイトル'] || ''} onChange={e => updatePost(i, 'タイトル', e.target.value)}
               style={{ width: '100%', padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '15px', fontWeight: '600', boxSizing: 'border-box', marginBottom: '8px' }} />
+          <input value={post['スラッグ'] || ''} onChange={e => updatePost(i, 'スラッグ', e.target.value)}
+                        placeholder="スラッグ（例：2026-06-30）"
+                        style={{ width: '100%', padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box', marginBottom: '8px' }} />
             <textarea rows={2} value={post['本文'] || ''} onChange={e => updatePost(i, '本文', e.target.value)}
               style={{ width: '100%', padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '14px', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }} />
           </div>
