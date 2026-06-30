@@ -62,7 +62,7 @@ export default async function NewsPage() {
                   <span style={{ fontSize: '12px', color: 'var(--gold)', border: '1px solid var(--gold)', padding: '2px 10px', borderRadius: '20px', whiteSpace: 'nowrap' }}>
                     {post['カテゴリ']}
                   </span>
-                  <span style={{ fontSize: '13px', color: 'var(--gray-600)' }}>{post['公開日']}</span>
+                  <span style={{ fontSize: '13px', color: 'var(--gray-600)' }}>{new Date(post['公開日']).toLocaleDateString('ja-JP')}</span>
                 </div>
                 <h3 style={{ fontSize: '17px', color: 'var(--navy)', marginBottom: '8px' }}>{post['タイトル']}</h3>
                 <p style={{
