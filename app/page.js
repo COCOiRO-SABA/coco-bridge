@@ -217,7 +217,7 @@ export default async function Home() {
                     href={`/news/${post['スラッグ']}`}
                     style={{ background: 'white', borderRadius: '8px', padding: '20px 24px', display: 'flex', gap: '16px', alignItems: 'center', textDecoration: 'none' }}
                   >
-                    <span style={{ fontSize: '13px', color: 'var(--gray-600)', whiteSpace: 'nowrap' }}>{post['公開日']}</span>
+                    <span style={{ fontSize: '13px', color: 'var(--gray-600)', whiteSpace: 'nowrap' }}>{new Date(post['公開日']).toLocaleDateString('ja-JP')}</span>
                     <span style={{ fontSize: '12px', color: 'var(--gold)', border: '1px solid var(--gold)', padding: '2px 10px', borderRadius: '20px', whiteSpace: 'nowrap' }}>{post['カテゴリ']}</span>
                     <span style={{ fontSize: '15px', color: 'var(--navy)' }}>{post['タイトル']}</span>
                   </a>
