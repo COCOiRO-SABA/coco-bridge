@@ -62,7 +62,7 @@ export default async function Home() {
     { href: '/about', label: '私たちについて', show: true },
     { href: '/staff', label: 'スタッフ', show: sections.staff },
     { href: '/recruit', label: '採用情報', show: sections.recruit },
-    { href: '/blog', label: 'ブログ', show: true },
+    { href: '/news', label: 'お知らせ', show: true },
     { href: '/contact', label: 'お問い合わせ', show: true },
   ].filter(item => item.show)
   return (
@@ -213,16 +213,19 @@ export default async function Home() {
             <div style={{ display: 'grid', gap: '12px', marginTop: '32px' }}>
               {news.map((post, i) => (
                 <FadeIn key={i} delay={i + 1}>
-                  <div style={{ background: 'white', borderRadius: '8px', padding: '20px 24px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+                  <a
+                    href={`/news/${post['スラッグ']}`}
+                    style={{ background: 'white', borderRadius: '8px', padding: '20px 24px', display: 'flex', gap: '16px', alignItems: 'center', textDecoration: 'none' }}
+                  >
                     <span style={{ fontSize: '13px', color: 'var(--gray-600)', whiteSpace: 'nowrap' }}>{post['公開日']}</span>
                     <span style={{ fontSize: '12px', color: 'var(--gold)', border: '1px solid var(--gold)', padding: '2px 10px', borderRadius: '20px', whiteSpace: 'nowrap' }}>{post['カテゴリ']}</span>
                     <span style={{ fontSize: '15px', color: 'var(--navy)' }}>{post['タイトル']}</span>
-                  </div>
+                  </a>
                 </FadeIn>
               ))}
             </div>
             <div style={{ textAlign: 'center', marginTop: '32px' }}>
-              <a href="/blog" style={{ fontSize: '14px', color: 'var(--navy)', borderBottom: '1px solid var(--navy)', paddingBottom: '2px' }}>お知らせ一覧を見る →</a>
+              <a href="/news" style={{ fontSize: '14px', color: 'var(--navy)', borderBottom: '1px solid var(--navy)', paddingBottom: '2px' }}>お知らせ一覧を見る →</a>
             </div>
           </div>
         </section>
@@ -273,4 +276,4 @@ export default async function Home() {
       </footer>
     </>
   )
-        }
+                }
