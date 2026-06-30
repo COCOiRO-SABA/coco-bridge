@@ -1,3 +1,10 @@
+function formatDate(value) {
+  if (!value) return ''
+  const d = new Date(value)
+  if (isNaN(d.getTime())) return String(value)
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
+}
+
 async function getPosts() {
     try {
           const res = await fetch(`${process.env.NEXT_PUBLIC_GAS_API}?sheet=お知らせ`, { cache: 'no-store' })
@@ -18,7 +25,7 @@ async function getConfig() {
     } catch (e) {
           return {}
     }
-}
+
 
 export const metadata = {
     title: 'お知らせ｜COCO&Bridge',
@@ -62,7 +69,7 @@ export default async function NewsPage() {
                     <span style={{ fontSize: '12px', color: 'var(--gold)', border: '1px solid var(--gold)', padding: '2px 10px', borderRadius: '20px', whiteSpace: 'nowrap' }}>
                        {post['カテゴリ']}
  </span>
-                    <span style={{ fontSize: '13px', color: 'var(--gray-600)' }}>{post['公開日']}</span>
+                    <span style={{ fontSize: '13px', color: 'var(--gray-600)' }}>{formatDate(post['公開日'])}</span>
   </div>
                 <h3 style={{ fontSize: '17px', color: 'var(--navy)', marginBottom: '8px' }}>{post['タイトル']}</h3>
                 <p style={{
