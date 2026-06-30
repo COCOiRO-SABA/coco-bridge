@@ -32,7 +32,7 @@ export default async function AboutPage() {
         <ul className="nav-links">
           <li><a href="/services">サービス</a></li>
           <li><a href="/about">私たちについて</a></li>
-          <li><a href="/blog">ブログ</a></li>
+          <li><a href="/news">お知らせ</a></li>
           <li><a href="/contact">お問い合わせ</a></li>
         </ul>
       </nav>
@@ -74,33 +74,3 @@ export default async function AboutPage() {
         <p style={{ fontSize: '16px', lineHeight: '2.2', color: 'var(--gray-600)', maxWidth: '760px', whiteSpace: 'pre-line', marginTop: '32px' }}>
           {config.profile_message}
         </p>
-      </section>
-
-      <section style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <p className="section-subtitle">COMPANY</p>
-          <h2 className="section-title">会社概要</h2>
-          <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '32px', maxWidth: '760px' }}>
-            <tbody>
-              {overview.map((item, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid var(--gray-200)' }}>
-                  <th style={{ padding: '16px 24px', textAlign: 'left', color: 'var(--navy)', fontWeight: '600', width: '200px', background: 'white' }}>
-                    {item['項目名']}
-                  </th>
-                  <td style={{ padding: '16px 24px', color: 'var(--gray-600)', background: 'white' }}>
-                    {item['内容']}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <footer className="footer">
-        <div className="footer-logo">COCO<span>&</span>Bridge</div>
-        <p>© {new Date().getFullYear()} {config.footer_text || 'COCO&Bridge株式会社'}</p>
-      </footer>
-    </>
-  )
-}
