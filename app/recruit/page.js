@@ -32,7 +32,7 @@ export default async function RecruitPage() {
           <li><a href="/services">サービス</a></li>
           <li><a href="/about">私たちについて</a></li>
           <li><a href="/staff">スタッフ</a></li>
-          <li><a href="/blog">ブログ</a></li>
+          <li><a href="/news">お知らせ</a></li>
           <li><a href="/contact">お問い合わせ</a></li>
         </ul>
       </nav>
