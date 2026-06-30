@@ -85,7 +85,7 @@ export default function ContactPage() {
     fontWeight: '600',
     color: '#1a2744',
     marginBottom: '8px',
-  }
+  }a}
 
   return (
     <>
@@ -94,11 +94,10 @@ export default function ContactPage() {
         <ul className="nav-links">
           <li><a href="/services">サービス</a></li>
           <li><a href="/about">私たちについて</a></li>
-          <li><a href="/blog">ブログ</a></li>
+          <li><a href="/news">お知らせ</a></li>
           <li><a href="/contact">お問い合わせ</a></li>
-        </ul>
-      </nav>
-
+    </ul>
+    </nav>
       <section className="hero" style={{ padding: '60px 40px' }}>
         <div className="hero-bg">
           <div className="hero-shape" />
@@ -205,7 +204,7 @@ export default function ContactPage() {
                 style={{ marginTop: '3px', width: '16px', height: '16px', cursor: 'pointer', flexShrink: 0 }}
               />
               <label htmlFor="privacy" style={{ fontSize: '14px', color: '#444', lineHeight: '1.6', cursor: 'pointer' }}>
-                <a href="/privacy" target="_blank" style={{ color: '#b8954a', textDecoration: 'underline' }}>プライバシーポリシー</a>
+                <a href="/privacy" target="_blank" style={{ color: '#b8954a', textDecoration: 'underline' }}>プライバシーポリシー</a>
                 に同意します<span style={{ color: '#b8954a', marginLeft: '4px' }}>*</span>
               </label>
             </div>
