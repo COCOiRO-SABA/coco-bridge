@@ -39,7 +39,7 @@ export default async function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet" />
         <style dangerouslySetInnerHTML={{ __html: dynamicCSS }} />
       </head>
-      <body>{children}</body>
+      <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>{children}</body>
     </html>
   )
 }
