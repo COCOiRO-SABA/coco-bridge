@@ -61,7 +61,9 @@ export default async function Home() {
           <h1>{config.site_name || 'COCO&Bridge'}</h1>
           <p className="hero-desc">{config.sub_copy}</p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '32px' }}>
-            <a href={config.cta_url || '/contact'} className="btn-primary">{config.cta_text || 'ç¡æç¸è«ã¯ãã¡ã'}|/a>
+            <a href={config.cta_url || '/contact'} className="btn-primary">
+              {config.cta_text || 'ç¡æç¸è«ã¯ãã¡ã'}
+            </a>
             <a href="/services" className="btn-outline">ãµã¼ãã¹ãè¦ã</a>
           </div>
         </section>
@@ -97,7 +99,7 @@ export default async function Home() {
             ))}
           </div>
           <div style={{ textAlign: 'center', marginTop: '48px' }}>
-            <a href="/services" className="btn-outline">ãµã¼ãã¹è©³ç´°ãè¦ã</a>
+            <a href="/services" className="btn-outline">ãµã¼ãã¹å¨³ç´°ãè¦ã</a>
           </div>
         </section>
       )}
@@ -156,7 +158,9 @@ export default async function Home() {
 
       <footer className="footer">
         <div className="footer-logo">COCO<span>&</span>Bridge</div>
-        <p>Â© {new Date().getFullYear()} {config.footer_text || 'COCO&Bridgeæ ªå¼ä¼ç¤¾'}|/p>
+        <p>
+          Â© {new Date().getFullYear()} {config.footer_text || 'COCO&Bridgeæ ªå¼ä¼ç¤¾'}
+        </p>
       </footer>
     </>
   )
