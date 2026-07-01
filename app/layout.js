@@ -1,19 +1,19 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'COCO&Bridge | 中小企業のデジタル伴走パートナー',
-  description: 'ウェブ制作・SNS運用・DX支援を通じて、中小企業のデジタル化を一緒に進めます。',
+  title: 'COCO&Bridge | ä¸­å°ä¼æ¥­ã®ãã¸ã¿ã«ä¼´èµ°ãã¼ããã¼',
+  description: 'ã¦ã§ãå¶ä½ã»SNSéç¨ã»DXæ¯æ´ãéãã¦ãä¸­å°ä¼æ¥­ã®ãã¸ã¿ã«åãä¸ç·ã«é²ãã¾ãã',
 }
 
 async function getSiteConfig() {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_GAS_API}?sheet=サイト全体設定`,
+      `${process.env.NEXT_PUBLIC_GAS_API}?sheet=ãµã¤ãå¨ä½è¨­å®`,
       { cache: 'no-store' }
     )
     const data = await res.json()
     const config = {}
-    data.forEach(row => { config[row['項目キー']] = row['値'] })
+    data.forEach(row => { config[row['é ç®ã­ã¼']] = row['å¤'] })
     return config
   } catch (e) {
     return {}
@@ -34,6 +34,9 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="ja">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet" />
         <style dangerouslySetInnerHTML={{ __html: dynamicCSS }} />
       </head>
       <body>{children}</body>
