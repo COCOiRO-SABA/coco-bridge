@@ -233,6 +233,26 @@ img {
 }
 
 /* ããã¿ã¼ */
+/* card grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 28px 24px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 32px rgba(26,39,68,0.1);
+  transform: translateY(-4px);
+}
+
 .footer {
   margin-top: auto;
   background: var(--navy);
@@ -266,6 +286,9 @@ img {
   }
   .section {
     padding: 60px 20px;
+  }
+  .card-grid {
+    grid-template-columns: 1fr;
   }
   .btn-outline {
     margin-left: 0;
