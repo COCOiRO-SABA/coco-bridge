@@ -160,12 +160,16 @@ export default async function Home() {
       )}
 
       {sections.cta !== false && (
-        <section className="section" style={{ background: 'var(--navy)', color: 'white', textAlign: 'center' }}>
-          <p className="section-subtitle" style={{ color: 'rgba(255,255,255,0.6)' }}>CONTACT</p>
-          <h2 className="section-title" style={{ color: 'white' }}>お問い合わせ</h2>
-          <p style={{ color: 'rgba(255,255,255,0.8)', marginBottom: '32px' }}>{config.cta_text || 'まずはお気軽にご相談ください。'}</p>
-          <a href={config.cta_url || '/contact'} className="btn-outline" style={{ borderColor: 'white', color: 'white' }}>
-            お問い合わせはこちら
+        <section style={{ background: '#f5f0e8', padding: '100px 40px', textAlign: 'center' }}>
+          <p style={{ fontSize: '12px', letterSpacing: '0.15em', color: 'var(--gold)', marginBottom: '16px' }}>CONTACT</p>
+          <h2 style={{ fontFamily: "'Noto Serif JP', 'Hiragino Mincho ProN', serif", fontSize: '32px', color: 'var(--navy)', marginBottom: '16px', fontWeight: '700' }}>
+            まずは気軽に相談ください
+          </h2>
+          <p style={{ color: '#666', marginBottom: '40px', fontSize: '15px', lineHeight: '1.8' }}>
+            貴社の課題をヒアリングし、最適なプランを提案します。
+          </p>
+          <a href={config.cta_url || '/contact'} className="btn-primary">
+            {config.cta_text || '無料相談はこちら'}
           </a>
         </section>
       )}
