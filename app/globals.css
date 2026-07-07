@@ -299,38 +299,12 @@ img {
 /* =============================
    デザイン強化（第2弾）
 ============================= */
-/* セクション見出しの英字装飾を大型化 */
+/* セクション見出し */
 .section-subtitle {
   font-size: 13px !important;
   letter-spacing: 0.2em !important;
-  position: relative !important;
-  display: inline-block !important;
 }
-.section-subtitle::after {
-  content: '';
-  display: block;
-  width: 48px;
-  height: 2px;
-  background: var(--gold);
-  margin-top: 10px;
-  opacity: 0.6;
-}
-/* 大型背景英字（セクションのあしらい） */
-.section-watermark {
-  position: absolute;
-  top: 20px;
-  right: 24px;
-  font-family: 'Noto Serif JP', serif;
-  font-size: clamp(60px, 10vw, 120px);
-  font-weight: 700;
-  color: var(--navy);
-  opacity: 0.04;
-  letter-spacing: 0.05em;
-  pointer-events: none;
-  user-select: none;
-  line-height: 1;
-  white-space: nowrap;
-}
+
 /* カードホバー質感の向上 */
 .service-card-hover {
   transition: box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
@@ -403,11 +377,6 @@ body {
   }
   .section-title {
     font-size: 26px !important;
-  }
-  .section-watermark {
-    font-size: 48px !important;
-    top: 12px !important;
-    right: 12px !important;
   }
   .nav {
     padding: 14px 20px !important;
