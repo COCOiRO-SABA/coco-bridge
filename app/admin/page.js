@@ -11,6 +11,10 @@ const SECTION_CONFIG = [
   { id: 'news', label: 'お知らせ', desc: 'ブログ・ニュース', editHref: '/admin/news' },
   { id: 'access', label: 'アクセス', desc: '住所・地図・営業時間', editHref: '/admin/access-manage' },
   { id: 'recruit', label: '採用情報', desc: '求人票', editHref: '/admin/recruit-manage' },
+  { id: 'pricing', label: '料金プラン', desc: '料金プラン一覧', editHref: '/admin/pricing-manage' },
+  { id: 'schedule', label: '1日の流れ', desc: '相談〜制作の流れ', editHref: '/admin/schedule-manage' },
+  { id: 'availability', label: '空き情報', desc: '相談可能な日時', editHref: '/admin/availability-manage' },
+  { id: 'faq', label: 'よくある質問', desc: 'FAQ', editHref: '/admin/faq-manage' },
   { id: 'cta', label: '相談CTA', desc: '問い合わせ誘導', editHref: '/admin/page-content', alwaysOn: true },
 ]
 export default function AdminDashboard() {
