@@ -103,7 +103,7 @@ img {
   background: linear-gradient(180deg, rgba(26,39,68,0.75) 0%, rgba(26,39,68,0.92) 60%, var(--navy) 100%);
 }
 
-.hero > *:not(.hero-photo-bg):not(.hero-bg) {
+.hero > *:not(.hero-photo-bg):not(.hero-bg):not(.hero-scroll-indicator) {
   position: relative;
   z-index: 1;
 }
