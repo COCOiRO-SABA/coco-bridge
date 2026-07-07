@@ -1,48 +1,57 @@
 const GAS_API = process.env.NEXT_PUBLIC_GAS_API
 
-function formatDate(value) {
-  if (!value) return ''
-  const d = new Date(value)
-  if (isNaN(d.getTime())) return String(value)
-  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
-}
-
 async function getSiteConfig() {
-  try {
-    const res = await fetch(`${GAS_API}?sheet=サイト全体設定`, { cache: 'no-store' })
-    const data = await res.json()
-    const config = {}
-    data.forEach(row => { config[row['項目キー']] = row['値'] })
-    return config
-  } catch (e) { return {} }
+  const res = await fetch(`${GAS_API}?sheet=サイト全体設定`, { cache: 'no-store' })
+  const data = await res.json()
+  const config = {}
+  data.forEach(row => { config[row['項目キー']] = row['値'] })
+  return config
 }
 
 async function getServices() {
-  try {
-    const res = await fetch(`${GAS_API}?sheet=サービス`, { cache: 'no-store' })
-    const data = await res.json()
-    return data.filter(s => s['公開'] === true || s['公開'] === 'TRUE' || s['公開'] === '公開')
-  } catch (e) { return [] }
+  const res = await fetch(`${GAS_API}?sheet=サービス`, { cache: 'no-store' })
+  const data = await res.json()
+  return data.filter(s => s['公開'] === true || s['公開'] === 'TRUE' || s['公開'] === '公開')
 }
 
 async function getSections() {
-  try {
-    const res = await fetch(`${GAS_API}?sheet=セクション設定`, { cache: 'no-store' })
-    const data = await res.json()
-    const sections = {}
-    data.forEach(row => {
-      sections[row['セクションID']] = row['表示'] === true || row['表示'] === 'TRUE'
-    })
-    return sections
-  } catch (e) { return {} }
+  const res = await fetch(`${GAS_API}?sheet=セクション設定`, { cache: 'no-store' })
+  const data = await res.json()
+  const sections = {}
+  data.forEach(row => {
+    sections[row['セクションID']] = row['表示'] === true || row['表示'] === 'TRUE'
+  })
+  return sections
 }
 
 async function getNews() {
-  try {
-    const res = await fetch(`${GAS_API}?sheet=お知らせ`, { cache: 'no-store' })
-    const data = await res.json()
-    return data.filter(n => n['ステータス'] === '公開').slice(0, 3)
-  } catch (e) { return [] }
+  const res = await fetch(`${GAS_API}?sheet=お知らせ`, { cache: 'no-store' })
+  const data = await res.json()
+  return data.filter(n => n['ステータス'] === '公開').slice(0, 3)
+}
+
+async function getFaq() {
+  const res = await fetch(`${GAS_API}?sheet=よくある質問`, { cache: 'no-store' })
+  const data = await res.json()
+  return data.filter(f => f['公開'] === true || f['公開'] === 'TRUE').sort((a, b) => a['表示順'] - b['表示順'])
+}
+
+async function getPricing() {
+  const res = await fetch(`${GAS_API}?sheet=料金表`, { cache: 'no-store' })
+  const data = await res.json()
+  return data.filter(p => p['公開'] === true || p['公開'] === 'TRUE').sort((a, b) => a['表示順'] - b['表示順'])
+}
+
+async function getSchedule() {
+  const res = await fetch(`${GAS_API}?sheet=1日の流れ`, { cache: 'no-store' })
+  const data = await res.json()
+  return data.filter(s => s['公開'] === true || s['公開'] === 'TRUE').sort((a, b) => a['表示順'] - b['表示順'])
+}
+
+async function getAvailability() {
+  const res = await fetch(`${GAS_API}?sheet=空き情報`, { cache: 'no-store' })
+  const data = await res.json()
+  return data.filter(a => a['公開'] === true || a['公開'] === 'TRUE').sort((a, b) => a['表示順'] - b['表示順'])
 }
 
 export const metadata = {
@@ -51,8 +60,9 @@ export const metadata = {
 }
 
 export default async function Home() {
-  const [config, services, sections, news] = await Promise.all([
-    getSiteConfig(), getServices(), getSections(), getNews()
+  const [config, services, sections, news, faq, pricing, schedule, availability] = await Promise.all([
+    getSiteConfig(), getServices(), getSections(), getNews(),
+    getFaq(), getPricing(), getSchedule(), getAvailability()
   ])
 
   return (
@@ -69,16 +79,11 @@ export default async function Home() {
 
       {sections.hero !== false && (
         <section className="hero">
-          <div className="hero-photo-bg">
-            <img src={config.profile_image || 'https://coco-i-ro.com/wp-content/uploads/2025/12/0019_original-scaled.jpg'} alt="" />
-          </div>
           <p className="hero-sub">{config.catch_copy}</p>
           <h1>{config.site_name || 'COCO&Bridge'}</h1>
           <p className="hero-desc">{config.sub_copy}</p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '32px' }}>
-            <a href={config.cta_url || '/contact'} className="btn-primary">
-              {config.cta_text || '無料相談はこちら'}
-            </a>
+            <a href={config.cta_url || '/contact'} className="btn-primary">{config.cta_text || '無料相談はこちら'}</a>
             <a href="/services" className="btn-outline">サービスを見る</a>
           </div>
         </section>
@@ -144,17 +149,132 @@ export default async function Home() {
         <section className="section" style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
           <p className="section-subtitle">NEWS</p>
           <h2 className="section-title">お知らせ</h2>
-          <div style={{ maxWidth: '760px', margin: '32px auto 0', display: 'grid', gap: '8px' }}>
-            {news.map((post, i) => (
-              <a key={i} href={`/news/${post['スラッグ']}`} style={{ textDecoration: 'none', background: 'white', borderRadius: '8px', padding: '20px 24px', display: 'flex', gap: '16px', alignItems: 'center' }}>
-                <span style={{ fontSize: '13px', color: 'var(--gray-600)', whiteSpace: 'nowrap' }}>{formatDate(post['公開日'])}</span>
-                <span style={{ fontSize: '12px', color: 'var(--gold)', border: '1px solid var(--gold)', padding: '2px 10px', borderRadius: '20px', whiteSpace: 'nowrap' }}>{post['カテゴリ']}</span>
-                <span style={{ fontSize: '15px', color: 'var(--navy)' }}>{post['タイトル']}</span>
-              </a>
+          <ul style={{ listStyle: 'none', padding: 0, maxWidth: '760px', margin: '32px auto 0' }}>
+            {news.map((item, i) => (
+              <li key={i} style={{ display: 'flex', gap: '24px', padding: '20px 0', borderBottom: '1px solid var(--gray-200)', alignItems: 'baseline' }}>
+                <time style={{ fontSize: '13px', color: 'var(--gray-600)', whiteSpace: 'nowrap' }}>{item['日付']}</time>
+                <span style={{ fontSize: '15px', color: 'var(--navy)' }}>{item['タイトル']}</span>
+              </li>
+            ))}
+          </ul>
+          <div style={{ textAlign: 'center', marginTop: '32px' }}>
+            <a href="/news" style={{ fontSize: '14px', color: 'var(--gold)', textDecoration: 'none', borderBottom: '1px solid var(--gold)', paddingBottom: '2px' }}>
+              お知らせ一覧を見る →
+            </a>
+          </div>
+        </section>
+      )}
+
+      {sections.pricing !== false && pricing.length > 0 && (
+        <section className="section">
+          <p className="section-subtitle">PRICING</p>
+          <h2 className="section-title">料金プラン</h2>
+          <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '48px' }}>
+            {pricing.map((plan, i) => {
+              const isRec = plan['おすすめ'] === true || plan['おすすめ'] === 'TRUE'
+              return (
+                <div key={i} style={{
+                  background: isRec ? 'var(--navy)' : 'white',
+                  color: isRec ? 'white' : 'var(--navy)',
+                  border: '2px solid var(--navy)',
+                  borderRadius: '12px',
+                  padding: '40px 32px',
+                  flex: '1',
+                  minWidth: '240px',
+                  maxWidth: '340px',
+                  position: 'relative'
+                }}>
+                  {isRec && (
+                    <span style={{ position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', background: 'var(--gold)', color: 'white', fontSize: '12px', padding: '4px 16px', borderRadius: '99px', whiteSpace: 'nowrap' }}>おすすめ</span>
+                  )}
+                  <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>{plan['プラン名']}</h3>
+                  <p style={{ fontSize: '36px', fontWeight: '700', margin: '16px 0 4px' }}>
+                    ¥{Number(plan['価格']).toLocaleString()}
+                    <span style={{ fontSize: '14px', fontWeight: '400' }}>/{plan['単位']}</span>
+                  </p>
+                  <p style={{ fontSize: '14px', opacity: '0.75', marginBottom: '24px', lineHeight: '1.6' }}>{plan['説明']}</p>
+                  <ul style={{ listStyle: 'none', padding: 0, fontSize: '14px' }}>
+                    {(plan['特徴'] || '').split('/').map((f, j) => (
+                      <li key={j} style={{ padding: '8px 0', borderBottom: `1px solid ${isRec ? 'rgba(255,255,255,0.15)' : 'var(--gray-200)'}`, display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <span style={{ color: 'var(--gold)' }}>✓</span>{f.trim()}
+                      </li>
+                    ))}
+                  </ul>
+                  <a href={config.cta_url || '/contact'} className={isRec ? 'btn-primary' : 'btn-outline'} style={{ display: 'block', marginTop: '32px', textAlign: 'center', ...(isRec ? {} : { borderColor: 'var(--navy)', color: 'var(--navy)' }) }}>
+                    このプランで相談する
+                  </a>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {sections.schedule !== false && schedule.length > 0 && (
+        <section className="section" style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
+          <p className="section-subtitle">FLOW</p>
+          <h2 className="section-title">1日の流れ</h2>
+          <div style={{ maxWidth: '640px', margin: '48px auto 0' }}>
+            {schedule.map((item, i) => (
+              <div key={i} style={{ display: 'flex', gap: '24px', alignItems: 'flex-start', marginBottom: '32px' }}>
+                <div style={{ background: 'var(--navy)', color: 'white', borderRadius: '8px', padding: '6px 14px', fontSize: '13px', fontWeight: '600', whiteSpace: 'nowrap', minWidth: '72px', textAlign: 'center', flexShrink: 0 }}>
+                  {item['時間']}
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '16px', color: 'var(--navy)', marginBottom: '6px', fontWeight: '600' }}>{item['タイトル']}</h3>
+                  <p style={{ fontSize: '14px', color: 'var(--gray-600)', lineHeight: '1.7' }}>{item['説明']}</p>
+                </div>
+              </div>
             ))}
           </div>
-          <div style={{ textAlign: 'center', marginTop: '32px' }}>
-            <a href="/news" style={{ fontSize: '14px', color: 'var(--navy)', borderBottom: '1px solid var(--navy)', paddingBottom: '2px' }}>お知らせ一覧を見る →</a>
+        </section>
+      )}
+
+      {sections.availability !== false && availability.length > 0 && (
+        <section className="section">
+          <p className="section-subtitle">AVAILABILITY</p>
+          <h2 className="section-title">空き情報</h2>
+          <div style={{ overflowX: 'auto', marginTop: '48px' }}>
+            <table style={{ width: '100%', maxWidth: '600px', margin: '0 auto', borderCollapse: 'collapse', fontSize: '15px' }}>
+              <thead>
+                <tr style={{ background: 'var(--navy)', color: 'white' }}>
+                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>曜日</th>
+                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>午前</th>
+                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>午後</th>
+                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>備考</th>
+                </tr>
+              </thead>
+              <tbody>
+                {availability.map((row, i) => (
+                  <tr key={i} style={{ borderBottom: '1px solid var(--gray-200)', background: i % 2 === 0 ? 'white' : 'var(--gray-100)' }}>
+                    <td style={{ padding: '12px 20px', textAlign: 'center', fontWeight: '600', color: 'var(--navy)' }}>{row['曜日']}</td>
+                    <td style={{ padding: '12px 20px', textAlign: 'center', fontSize: '18px', color: row['午前'] === '○' ? 'var(--gold)' : '#e55' }}>{row['午前']}</td>
+                    <td style={{ padding: '12px 20px', textAlign: 'center', fontSize: '18px', color: row['午後'] === '○' ? 'var(--gold)' : '#e55' }}>{row['午後']}</td>
+                    <td style={{ padding: '12px 20px', fontSize: '13px', color: 'var(--gray-600)' }}>{row['備考']}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {sections.faq !== false && faq.length > 0 && (
+        <section className="section" style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
+          <p className="section-subtitle">FAQ</p>
+          <h2 className="section-title">よくある質問</h2>
+          <div style={{ maxWidth: '760px', margin: '48px auto 0' }}>
+            {faq.map((item, i) => (
+              <details key={i} style={{ borderBottom: '1px solid var(--gray-200)', padding: '20px 0' }}>
+                <summary style={{ fontSize: '16px', color: 'var(--navy)', fontWeight: '600', cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>Q. {item['質問']}</span>
+                  <span style={{ fontSize: '20px', color: 'var(--gold)', flexShrink: 0, marginLeft: '16px' }}>＋</span>
+                </summary>
+                <p style={{ marginTop: '16px', fontSize: '15px', color: 'var(--gray-600)', lineHeight: '1.8', paddingLeft: '8px' }}>
+                  A. {item['回答']}
+                </p>
+              </details>
+            ))}
           </div>
         </section>
       )}
@@ -176,9 +296,7 @@ export default async function Home() {
 
       <footer className="footer">
         <div className="footer-logo">COCO<span>&</span>Bridge</div>
-        <p>
-          {'©'} {new Date().getFullYear()} {config.footer_text || 'COCO&Bridge株式会社'}
-        </p>
+        <p>© {new Date().getFullYear()} {config.footer_text || 'COCO&Bridge株式会社'}</p>
       </footer>
     </>
   )
