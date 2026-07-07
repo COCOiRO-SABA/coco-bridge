@@ -295,3 +295,128 @@ img {
     margin-top: 12px;
   }
 }
+
+/* =============================
+   デザイン強化（第2弾）
+============================= */
+/* セクション見出しの英字装飾を大型化 */
+.section-subtitle {
+  font-size: 13px !important;
+  letter-spacing: 0.2em !important;
+  position: relative !important;
+  display: inline-block !important;
+}
+.section-subtitle::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 2px;
+  background: var(--gold);
+  margin-top: 10px;
+  opacity: 0.6;
+}
+/* 大型背景英字（セクションのあしらい） */
+.section-watermark {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(60px, 10vw, 120px);
+  font-weight: 700;
+  color: var(--navy);
+  opacity: 0.04;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+/* カードホバー質感の向上 */
+.service-card-hover {
+  transition: box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+.service-card-hover:hover {
+  box-shadow: 0 24px 56px rgba(26,39,68,0.16) !important;
+  transform: translateY(-10px) !important;
+}
+/* ボタンの質感向上 */
+.btn-primary {
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+  box-shadow: 0 4px 16px rgba(184,149,74,0.3) !important;
+}
+.btn-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 28px rgba(184,149,74,0.45) !important;
+}
+.btn-outline {
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease !important;
+}
+.btn-outline:hover {
+  background: rgba(255,255,255,0.12) !important;
+  transform: translateY(-2px) !important;
+}
+/* ページ読み込みフェード */
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+body {
+  animation: pageFadeIn 0.5s ease;
+}
+/* ヒーローのスクロールインジケーター */
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.5);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+.hero-scroll-indicator::after {
+  content: '';
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), transparent);
+  animation: scrollPulse 2s ease infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.7); transform-origin: top; }
+  50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+}
+/* スマホ最適化 */
+@media (max-width: 640px) {
+  .hero {
+    padding: 100px 24px 90px !important;
+  }
+  .hero h1 {
+    font-size: 28px !important;
+    line-height: 1.6 !important;
+  }
+  .section {
+    padding: 64px 24px !important;
+  }
+  .section-title {
+    font-size: 26px !important;
+  }
+  .section-watermark {
+    font-size: 48px !important;
+    top: 12px !important;
+    right: 12px !important;
+  }
+  .nav {
+    padding: 14px 20px !important;
+  }
+  .nav-links {
+    gap: 14px !important;
+    font-size: 12px !important;
+  }
+  .footer {
+    padding: 40px 24px !important;
+  }
+}
