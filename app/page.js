@@ -91,8 +91,7 @@ export default async function Home() {
       )}
 
       {sections.concept !== false && (
-        <section className="section" style={{ position: 'relative', overflow: 'hidden' }}>
-          <span className="section-watermark">CONCEPT</span>
+        <section className="section">
           <p className="section-subtitle">CONCEPT</p>
           <h2 className="section-title">{config.concept_title || 'COCO&Bridgeについて'}</h2>
           <p style={{ fontSize: '16px', lineHeight: '2', color: 'var(--gray-600)', maxWidth: '760px', margin: '32px auto 0', whiteSpace: 'pre-line' }}>
@@ -102,8 +101,7 @@ export default async function Home() {
       )}
 
       {sections.services !== false && services.length > 0 && (
-        <section className="section" style={{ background: 'var(--gray-100)', padding: '80px 40px' , position: 'relative', overflow: 'hidden'}}>
-          <span className="section-watermark">SERVICES</span>
+        <section className="section" style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
           <p className="section-subtitle">SERVICES</p>
           <h2 className="section-title">サービス一覧</h2>
           <div className="card-grid" style={{ marginTop: '48px' }}>
@@ -128,8 +126,7 @@ export default async function Home() {
       )}
 
       {sections.profile !== false && (
-        <section className="section" style={{ position: 'relative', overflow: 'hidden' }}>
-          <span className="section-watermark">PROFILE</span>
+        <section className="section">
           <p className="section-subtitle">PROFILE</p>
           <h2 className="section-title">代表プロフィール</h2>
           <div style={{ display: 'flex', gap: '40px', alignItems: 'center', marginTop: '48px', flexWrap: 'wrap' }}>
@@ -150,8 +147,7 @@ export default async function Home() {
       )}
 
       {sections.news !== false && news.length > 0 && (
-        <section className="section" style={{ background: 'var(--gray-100)', padding: '80px 40px' , position: 'relative', overflow: 'hidden'}}>
-          <span className="section-watermark">NEWS</span>
+        <section className="section" style={{ background: 'var(--gray-100)', padding: '80px 40px' }}>
           <p className="section-subtitle">NEWS</p>
           <h2 className="section-title">お知らせ</h2>
           <ul style={{ listStyle: 'none', padding: 0, maxWidth: '760px', margin: '32px auto 0' }}>
